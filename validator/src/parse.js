@@ -5,7 +5,9 @@ const HEADER_RE = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
 /**
  * Split a factfile.md into its header, title and level-2 sections, keeping line numbers.
  */
-export function parseFactfile(text) {
+export function parseFactfile(rawText) {
+  // Windows (CRLF) and old Mac (CR) line endings are read the same as Unix (LF).
+  const text = rawText.replace(/^﻿/, '').replace(/\r\n?/g, '\n');
   const doc = {
     text,
     lines: text.split(/\r?\n/),

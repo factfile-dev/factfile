@@ -100,7 +100,7 @@ test('an expired review_by blocks Checked but not Comparable', async () => {
 });
 
 test('prices without currency or source fail Comparable', async () => {
-  const r = await mutate('software', /  currency: GBP\n/, '');
+  const r = await mutate('software', /  currency: GBP\r?\n/, '');
   assert.equal(r.level, 'basic');
   assert.ok(rules(r).includes('header.pricing.currency'));
 });
@@ -120,6 +120,21 @@ test('unknown header fields warn, x_ fields are allowed', async () => {
 test('a repeated claim in two sections fails rule 4', async () => {
   const r = await mutate('store', '- No physical shop or click-and-collect.', '- No physical shop or click-and-collect.\n- Tea pouches are home-compostable.');
   assert.ok(rules(r).includes('integrity.repeated'));
+});
+
+test('a file saved on Windows (CRLF line endings) gives the same result', async () => {
+  for (const name of ['software', 'local', 'store']) {
+    const lf = (await example(name)).replace(/\r\n/g, '\n');
+    const unix = await validate({ text: lf, today });
+    const windows = await validate({ text: lf.replace(/\n/g, '\r\n'), today });
+    assert.equal(windows.level, unix.level, name);
+    assert.deepEqual(windows.findings, unix.findings, name);
+  }
+});
+
+test('a byte-order mark at the start does not break the header', async () => {
+  const r = await validate({ text: '﻿' + (await example('software')), today });
+  assert.equal(r.level, 'comparable');
 });
 
 test('invisible characters fail rule 5', async () => {
