@@ -7,7 +7,7 @@ const HEADER_RE = /^---\r?\n([\s\S]*?)\r?\n---[ \t]*(?:\r?\n|$)/;
  */
 export function parseFactfile(rawText) {
   // Windows (CRLF) and old Mac (CR) line endings are read the same as Unix (LF).
-  const text = rawText.replace(/^﻿/, '').replace(/\r\n?/g, '\n');
+  const text = rawText.replace(/^\uFEFF/, '').replace(/\r\n?/g, '\n');
   const doc = {
     text,
     lines: text.split(/\r?\n/),

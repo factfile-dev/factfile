@@ -1,8 +1,53 @@
-# factfile validator
+# factfile
 
-Checks a [factfile.md](https://github.com/factfile-dev/factfile) against the specification and reports the level it reaches (**Basic**, **Comparable** or **Checked**) with every problem, line by line, in plain words.
+Tools for [factfile.md](https://github.com/factfile-dev/factfile):
 
-## Use it
+- **`factfile generate`** writes a first draft from a business's website, using only what the site visibly says.
+- **`factfile validate`** checks a file against the specification and reports the level it reaches (**Basic**, **Comparable** or **Checked**) with every problem, line by line, in plain words.
+
+## Generate a draft
+
+```sh
+npx factfile generate example.com                 # writes ./factfile.md
+npx factfile generate example.com --ai ollama     # a local AI words the sentences
+```
+
+The generator reads the home page and the few pages most likely to hold facts (prices, booking, contact, delivery, returns, privacy), up to 8 pages in all. It respects `robots.txt`. It uses the site's visible text and its schema.org structured data to fill in the name, summary, category, prices, address, opening hours, phone, legal name, contact email, the next step and links to independent reviews.
+
+**It never invents a fact.** Every fact links to the page it came from. What a website rarely says, such as who the business is *not* for or what it does not do, is left as a `TODO` for the owner. The validator refuses to pass a file until every `TODO` is gone, so an unchecked draft can't be published by mistake.
+
+```
+Draft written to factfile.md from 4 page(s).
+Found on the site:
+  ✓ Name: Hollybank Dog Grooming
+  ✓ Summary: Appointment-only dog grooming salon in south Birmingham for dogs of all sizes.
+  ✓ Prices: 4 found
+  ✓ Address: Unit 4, Hollybank Yard, Birmingham, B00 0AA
+  ✓ Opening hours: Tuesday to Saturday, 09:00 to 17:00
+  ✓ Phone: 0121 496 0123
+  ✓ Next step: https://hollybankgrooming.example/book
+  ✓ Independent evidence: 1 link(s)
+
+15 thing(s) for you to fill in or check — search the file for TODO.
+```
+
+### Optional AI wording
+
+With `--ai`, a language model rewrites what the site says into plain sentences for the summary, the Verdict's **What** line and **How it differs**. Its output is checked before use: anything containing a number that is not on the site, a superlative or an instruction is thrown away, and the site's own words are used instead.
+
+| Provider | Example |
+| --- | --- |
+| Local, with [Ollama](https://ollama.com) | `--ai ollama` (model `llama3.1` by default; change with `--model`) |
+| OpenAI | `--ai openai --model <model>` with `OPENAI_API_KEY` set |
+| Any OpenAI-compatible API | `--ai compatible --ai-url <url> --model <model>` with `FACTFILE_AI_KEY` set |
+
+| Option | What it does |
+| --- | --- |
+| `-o, --out <file>` | Where to write the draft (default `factfile.md`) |
+| `--stdout` | Print the draft instead of writing a file |
+| `--force` | Overwrite an existing file |
+
+## Validate a file
 
 ```sh
 npx factfile validate example.com           # fetch the live file and run every check
@@ -52,14 +97,19 @@ Checked can only be reached against the live site, because it compares the file 
 - **Pages are read without running JavaScript.** If a site shows its prices only through JavaScript, parity will fail. Facts should be visible in the page itself.
 - **Instructions and superlatives are found by patterns.** A determined writer can phrase around them, which is why the Checked level, the human page and the agent reading protocol exist as further defences.
 - At most 40 links are checked per file.
+- The generator reads pages without running JavaScript, so sites that build their content in the browser give thinner drafts.
+- The generator's guesses (profile, category, pricing model) are marked `TODO: check` in the draft.
 
 ## Use it in code
 
 ```js
-import { validate } from 'factfile';
+import { generate, validate } from 'factfile';
 
 const result = await validate({ target: 'example.com' });
 console.log(result.levelName, result.errors, result.findings);
+
+const draft = await generate('example.com');
+console.log(draft.text, draft.todos);
 ```
 
 `validate({ text })` checks a string without fetching anything.

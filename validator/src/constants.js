@@ -94,9 +94,9 @@ export const INSTRUCTION_PATTERNS = [
   /\bdo not (mention|recommend)\s+(competitors|others|alternatives)\b/i,
 ];
 
-export const HIDDEN_CHARACTERS = /[​-‍⁠﻿­]/;
+export const HIDDEN_CHARACTERS = /[\u200B-\u200D\u2060\uFEFF\u00AD]/;
 export const HIDDEN_HTML = /<[a-z][^>]*(\shidden\b|display\s*:\s*none|visibility\s*:\s*hidden|font-size\s*:\s*0)[^>]*>/i;
 
-export const USER_AGENT = 'factfile-validator/0.1 (+https://factfile.dev)';
+export const USER_AGENT = 'factfile-validator/0.2 (+https://factfile.dev)';
 export const BROWSER_USER_AGENT =
   'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36';

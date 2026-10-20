@@ -68,7 +68,28 @@ export function extractFigures(line) {
   return (visible.match(FIGURE_RE) || []).map((raw) => raw.trim());
 }
 
-const STATISTIC_RE = /\d\s?%|\b\d+(\.\d+)?\s?(x|times)\b(?!\s*a\b)/i;
+const SUPERLATIVE_RE = new RegExp(
+  `(^|[^\\p{L}\\p{N}-])(${SUPERLATIVES.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?=$|[^\\p{L}\\p{N}-])|#1\\b`,
+  'iu',
+);
+
+/** The superlative or ranking word in a piece of text, or null. "Best for" labels are allowed. */
+export function findSuperlative(text) {
+  const cleaned = stripLinks(text)
+    .replace(/\*\*Best for:\*\*/g, '')
+    .replace(/\bBest for\b/g, '')
+    .replace(/\bleading\s+(to|up|into|on)\b/gi, ''); // the verb, not the ranking
+  const m = cleaned.match(SUPERLATIVE_RE);
+  return m ? (m[2] || m[0]).trim() : null;
+}
+
+/** True if the text reads as an instruction to the reader (an AI) rather than a description. */
+export function isInstruction(text) {
+  const visible = stripLinks(text);
+  return INSTRUCTION_PATTERNS.some((re) => re.test(visible));
+}
+
+const STATISTIC_RE =/\d\s?%|\b\d+(\.\d+)?\s?(x|times)\b(?!\s*a\b)/i;
 const RATING_RE = /★|☆|\b\d(\.\d)?\s?(\/\s?5|\/\s?10|out of (5|10)|stars?)\b/i;
 
 function normaliseClaim(str) {
@@ -384,28 +405,29 @@ export function checkFile(doc, { today = new Date() } = {}) {
     ...['summary', 'category'].filter((k) => typeof hdr[k] === 'string').map((k) => ({ n: 1, text: hdr[k] })),
   ];
   for (const { n, text } of scanForInstructions) {
-    if (INSTRUCTION_PATTERNS.some((re) => re.test(text))) {
+    if (isInstruction(text)) {
       add('integrity.addressed-to-ai', 'basic', 'error', 'This line reads as an instruction to the reader. The file must describe the business, never tell an agent what to do.', n, '§8.1 rule 5');
     }
   }
 
   // Rule 6: superlatives (Best for labels excepted)
-  const supRe = new RegExp(`(^|[^\\p{L}\\p{N}-])(${SUPERLATIVES.map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')).join('|')})(?=$|[^\\p{L}\\p{N}-])|#1\\b`, 'iu');
   const scanForSuperlatives = [
-    ...bodyLines.map((l) => ({ n: l.n, text: stripLinks(l.line) })),
+    ...bodyLines.map((l) => ({ n: l.n, text: l.line })),
     ...['summary', 'category'].filter((k) => typeof hdr[k] === 'string').map((k) => ({ n: 1, text: hdr[k] })),
   ];
   for (const { n, text } of scanForSuperlatives) {
-    const cleaned = text
-      .replace(/\*\*Best for:\*\*/g, '')
-      .replace(/\bBest for\b/g, '')
-      .replace(/\bleading\s+(to|up|into|on)\b/gi, ''); // the verb, not the ranking
-    const m = cleaned.match(supRe);
-    if (m) {
-      const word = (m[2] || m[0]).trim();
+    const word = findSuperlative(text);
+    if (word) {
       add('integrity.superlatives', 'basic', 'error', `"${word}" is a superlative or ranking. These are not allowed anywhere in the file.`, n, '§8.1 rule 6');
     }
   }
+
+  // Drafts: placeholders left by the generator (or by hand) must be filled in before publishing.
+  doc.lines.forEach((line, i) => {
+    if (/\bTODO\b/.test(line)) {
+      add('draft.todo', 'basic', 'error', `Unfinished draft: ${line.replace(/^.*?\bTODO\b:?\s*/, '').replace(/["#]+\s*$/, '').trim() || 'fill in this line'}.`, i + 1, '§4');
+    }
+  });
 
   // Rule 4: state each fact once (outside the Verdict)
   const claims = new Map();

@@ -133,11 +133,11 @@ test('a file saved on Windows (CRLF line endings) gives the same result', async 
 });
 
 test('a byte-order mark at the start does not break the header', async () => {
-  const r = await validate({ text: '﻿' + (await example('software')), today });
+  const r = await validate({ text: '\uFEFF' + (await example('software')), today });
   assert.equal(r.level, 'comparable');
 });
 
 test('invisible characters fail rule 5', async () => {
-  const r = await mutate('store', 'An online shop', 'An online​ shop');
+  const r = await mutate('store', 'An online shop', 'An online\u200B shop');
   assert.ok(rules(r).includes('integrity.hidden'));
 });

@@ -1,7 +1,7 @@
 {
   "name": "factfile",
-  "version": "0.1.0",
-  "description": "Validator for factfile.md, the open standard that describes a business to AI agents.",
+  "version": "0.2.0",
+  "description": "Generate and validate factfile.md, the open standard that describes a business to AI agents.",
   "type": "module",
   "bin": {
     "factfile": "bin/factfile.js"
@@ -41,6 +41,7 @@
     "url": "https://github.com/factfile-dev/factfile/issues"
   },
   "dependencies": {
+    "node-html-parser": "^6.1.13",
     "tldts": "^6.1.0",
     "yaml": "^2.5.0"
   }
