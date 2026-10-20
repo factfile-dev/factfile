@@ -1,0 +1,12 @@
+# Changelog
+
+## v0.1-draft (20 October 2026)
+
+First public draft of the factfile.md specification.
+
+- File format: YAML header, five-line Verdict, fixed sections, Sources and end marker
+- 8 required header fields and 7 profiles (software, store, local, service, product, content, organisation)
+- 8 integrity rules, including visible parity and receipts
+- Three conformance levels: Basic, Comparable, Checked
+- Agent reading protocol and security considerations
+- Three example files: software, local business, online shop
