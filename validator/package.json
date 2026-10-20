@@ -1,0 +1,47 @@
+{
+  "name": "factfile",
+  "version": "0.1.0",
+  "description": "Validator for factfile.md, the open standard that describes a business to AI agents.",
+  "type": "module",
+  "bin": {
+    "factfile": "bin/factfile.js"
+  },
+  "exports": {
+    ".": "./src/index.js"
+  },
+  "files": [
+    "bin",
+    "src",
+    "README.md",
+    "LICENSE"
+  ],
+  "scripts": {
+    "test": "node --test"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "keywords": [
+    "factfile",
+    "ai-agents",
+    "llm",
+    "validator",
+    "web-standards",
+    "markdown"
+  ],
+  "author": "Alan Kiayi <hello@factfile.dev>",
+  "license": "MIT",
+  "homepage": "https://factfile.dev",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/factfile-dev/factfile.git",
+    "directory": "validator"
+  },
+  "bugs": {
+    "url": "https://github.com/factfile-dev/factfile/issues"
+  },
+  "dependencies": {
+    "tldts": "^6.1.0",
+    "yaml": "^2.5.0"
+  }
+}

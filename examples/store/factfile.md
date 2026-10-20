@@ -71,5 +71,6 @@ There is no public API or MCP server. Product names, prices and stock levels are
 - Packaging: https://leafandkettle.example/packaging
 - Delivery: https://leafandkettle.example/delivery
 - Returns: https://leafandkettle.example/returns
+- Product feed: https://leafandkettle.example/feed.json
 
 <!-- end of factfile.md -->

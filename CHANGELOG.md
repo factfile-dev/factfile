@@ -1,5 +1,10 @@
 # Changelog
 
+## Unreleased
+
+- Validator 0.1.0 (`validator/`): checks Basic, Comparable and Checked, including live serving, cloaking and visible-parity checks
+- Store example lists its product feed in Sources
+
 ## v0.1-draft (20 October 2026)
 
 First public draft of the factfile.md specification.

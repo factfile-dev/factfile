@@ -58,6 +58,14 @@ Full examples: [software](examples/software/factfile.md) · [local business](exa
 
 Agents are told to treat the file as the publisher's claims, to check the receipts, and to respect what the business says it is **not** for.
 
+## Check a file
+
+```sh
+npx factfile validate example.com
+```
+
+The [validator](validator/) reports the level a file reaches (Basic, Comparable or Checked) and every problem, line by line.
+
 ## Read the specification
 
 **[SPEC.md](SPEC.md)**: factfile.md v0.1, draft for public comment.
@@ -68,6 +76,6 @@ v0.1 is a draft. Fields may change before v1.0. Comments and objections are welc
 
 ## Licence
 
-The specification is published under [CC BY 4.0](LICENSE). Reference tools will be MIT-licensed. The name factfile.md is not licensed under CC BY; adapted or forked versions must use a different name.
+The specification is published under [CC BY 4.0](LICENSE). The validator is [MIT-licensed](validator/LICENSE). The name factfile.md is not licensed under CC BY; adapted or forked versions must use a different name.
 
 Created by **Alan Kiayi** · [factfile.dev](https://factfile.dev) · hello@factfile.dev
