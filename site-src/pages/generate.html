@@ -1,0 +1,104 @@
+<!-- {"title": "Generate a factfile.md from your website, free", "description": "Draft a factfile.md from your website in your browser, fill in what only you can answer, check it with the official validator and download every file you need.", "scripts": ["/factfile-tools.js", "/generate.js"]} -->
+<header class="page-head">
+  <span class="pill mint"><span class="live" aria-hidden="true"></span>Free, runs in your browser</span>
+  <h1>Generate your factfile.md</h1>
+  <p class="sub">Draft a file from your website, fill in what only you can answer, check it with the official validator, then download everything you need to publish it.</p>
+</header>
+
+<section class="gen-start" id="gen-start" aria-labelledby="gen-start-title">
+  <h2 id="gen-start-title" class="sr-only">Start</h2>
+  <form class="gen-card gen-main" id="gen-from-site" novalidate>
+    <div class="gen-step"><span class="ico sky" aria-hidden="true">1</span><div><h3>Draft it from your website</h3><p>Reads your home page and up to 10 pages most likely to hold facts, respecting robots.txt. It never invents a fact: anything your site does not say is marked for you to fill in.</p></div></div>
+    <label class="sr-only" for="gen-url">Your website address</label>
+    <div class="gen-url">
+      <span aria-hidden="true">https://</span>
+      <input id="gen-url" name="url" type="text" inputmode="url" autocomplete="url" spellcheck="false" placeholder="yourbusiness.com" required>
+      <button class="btn btn-dark" type="submit">Draft my file <span class="arr" aria-hidden="true">→</span></button>
+    </div>
+    <div class="gen-log" id="gen-log" role="status" aria-live="polite" hidden></div>
+    <div class="gen-alt">
+      <span>Or</span>
+      <button class="btn btn-s" type="button" id="gen-blank">Start from the blank template</button>
+      <button class="btn btn-s" type="button" id="gen-paste">Paste an existing file</button>
+    </div>
+    <p class="gen-resume" id="gen-resume" hidden>You have a draft saved in this browser. <button class="link-btn" type="button">Continue where you left off</button></p>
+  </form>
+  <ul class="gen-promises">
+    <li><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z"/></svg>Same code as <code>npx factfile</code></li>
+    <li><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z"/></svg>Your draft stays in your browser</li>
+    <li><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z"/></svg>No account, no sign-up</li>
+  </ul>
+</section>
+
+<section class="gen-work" id="gen-work" aria-label="Edit, check and download" hidden>
+  <div class="gen-grid">
+    <div class="gen-card gen-editor">
+      <div class="gen-bar">
+        <div><span class="ico lilac" aria-hidden="true">2</span><h2>Fill in what only you know</h2></div>
+        <div class="gen-bar-actions">
+          <span class="gen-count"><b data-todo-count>0</b> to fill in</span>
+          <button class="btn btn-s btn-dark" type="button" id="gen-next" aria-keyshortcuts="Control+J">Next to fill in</button>
+        </div>
+      </div>
+      <details class="gen-todos-wrap" open>
+        <summary>Needs your input (<span data-todo-count>0</span>)</summary>
+        <ol class="gen-todos" id="gen-todos"></ol>
+      </details>
+      <div class="gen-code">
+        <div class="gen-gutter" id="gen-gutter" aria-hidden="true"></div>
+        <label class="sr-only" for="gen-text">factfile.md contents</label>
+        <textarea id="gen-text" spellcheck="true" wrap="off" autocapitalize="off" autocomplete="off"></textarea>
+      </div>
+      <p class="gen-hint">Replace each <code>TODO</code> with your own words, and delete the <code># TODO</code> notes once a line is right. Press <kbd>Ctrl</kbd> + <kbd>J</kbd> to jump to the next one. Your draft saves automatically in this browser.</p>
+    </div>
+
+    <div class="gen-card gen-side gen-tabs">
+      <div class="gen-levelbox">
+        <div class="gen-levelhead"><span>Level reached</span><b id="gen-level-name">Not yet Basic</b></div>
+        <ol class="gen-level" aria-label="Levels">
+          <li data-level="basic">Basic</li><li data-level="comparable">Comparable</li><li data-level="checked">Checked</li>
+        </ol>
+      </div>
+      <div role="tablist" aria-label="Results">
+        <button role="tab" type="button" id="tab-check" aria-controls="panel-check" aria-selected="true">Check</button>
+        <button role="tab" type="button" id="tab-preview" aria-controls="panel-preview" aria-selected="false" tabindex="-1">Page preview</button>
+        <button role="tab" type="button" id="tab-setup" aria-controls="panel-setup" aria-selected="false" tabindex="-1">Setup guide</button>
+      </div>
+      <div role="tabpanel" id="panel-check" aria-labelledby="tab-check">
+        <div id="gen-check"></div>
+        <div class="gen-online">
+          <button class="btn btn-s" type="button" id="gen-online" disabled>Check live pages for the Checked level</button>
+          <p class="gen-note" id="gen-online-note" aria-live="polite">Once every line is filled in, this checks that each linked page is live and shows the same facts.</p>
+        </div>
+      </div>
+      <div role="tabpanel" id="panel-preview" aria-labelledby="tab-preview" hidden>
+        <p class="gen-note">This is your Key facts page for <code>/factfile</code>, the second signpost.</p>
+        <div class="gen-preview prose" id="gen-preview"></div>
+      </div>
+      <div role="tabpanel" id="panel-setup" aria-labelledby="tab-setup" hidden>
+        <label class="gen-select">Your website is built with
+          <select id="gen-platform">
+            <option value="">Not sure / other</option>
+            <option value="wordpress">WordPress</option><option value="shopify">Shopify</option><option value="wix">Wix</option>
+            <option value="squarespace">Squarespace</option><option value="webflow">Webflow</option><option value="nextjs">Next.js</option>
+          </select>
+        </label>
+        <pre class="gen-setup" id="gen-setup" tabindex="0"></pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="gen-card gen-download">
+    <div class="gen-bar"><div><span class="ico mint" aria-hidden="true">3</span><h2>Download what you need</h2></div>
+      <button class="btn btn-dark btn-l" type="button" id="gen-zip">Download all (.zip)</button></div>
+    <p class="gen-warn" id="gen-md-warn" hidden>Your file still has lines to fill in. You can download the draft now, but do not publish it until every line is done.</p>
+    <ul class="gen-files">
+      <li><div><b>factfile.md</b><span>The file itself. Upload it to your website root.</span></div><button class="btn btn-s" type="button" data-download="factfile.md">Download</button></li>
+      <li><div><b>factfile.html</b><span>A complete Key facts page to upload at <code>/factfile</code>.</span></div><button class="btn btn-s" type="button" data-download="factfile.html" data-needs-page>Download</button></li>
+      <li><div><b>factfile-page.html</b><span>The same page, to paste into a site builder.</span></div><button class="btn btn-s" type="button" data-download="factfile-page.html" data-needs-page>Download</button></li>
+      <li><div><b>factfile-setup.md</b><span>Step-by-step guide to the five signposts for your platform.</span></div><button class="btn btn-s" type="button" data-download="factfile-setup.md">Download</button></li>
+      <li><div><b>llms.txt line</b><span>One line that points language models to your file.</span></div><button class="btn btn-s" type="button" id="gen-copy-llms">Copy llms.txt line</button></li>
+    </ul>
+    <p class="gen-foot"><button class="link-btn" type="button" id="gen-reset">Clear this draft and start again</button></p>
+  </div>
+</section>

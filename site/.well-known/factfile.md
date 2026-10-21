@@ -12,7 +12,7 @@ pricing:
   currency: GBP
   from: 0
   source: https://factfile.dev/tools
-get_started: https://factfile.dev/tools
+get_started: https://factfile.dev/generate
 human_page: https://factfile.dev/factfile
 publisher: { legal_name: "Alan Kiayi", corrections: "hello@factfile.dev" }
 agent_access: { api: none, mcp: none, docs: https://factfile.dev/spec }
@@ -26,7 +26,7 @@ freshness: { last_verified: 2026-10-21, review_by: 2027-04-21, generated_by: man
 - **Best for:** Small businesses, makers and agencies who want AI assistants to describe their offer, prices and fit correctly.
 - **Not for:** Businesses looking to persuade AI assistants: the file allows no superlatives or text aimed at AI.
 - **Price:** Free: the specification is open under CC BY 4.0 and the tools are open source ([tools](https://factfile.dev/tools)).
-- **Next step:** Draft a file from your website with `npx factfile generate example.com` ([tools](https://factfile.dev/tools)).
+- **Next step:** Draft a file from your website in the browser ([generator](https://factfile.dev/generate)).
 
 ## Fit
 ### Best for
@@ -50,7 +50,7 @@ The specification and the tools cost nothing. The specification is published und
 - npm package page, with download figures counted by npm: https://www.npmjs.com/package/factfile
 
 ## How to start
-1. Draft a file from your website with `npx factfile generate example.com`.
+1. Draft a file from your website at https://factfile.dev/generate, or with `npx factfile generate example.com`.
 2. Complete the lines the draft marks for you, then check the file with `npx factfile validate factfile.md`.
 3. Upload it to your website's root and add the signposts listed in `factfile-setup.md`.
 
@@ -60,16 +60,18 @@ There is no API or MCP server yet. Agents can fetch `/factfile.md` from any site
 ## Limitations
 - Version 0.1 is a draft for public comment, so fields and headings may change before version 1.0.
 - AI assistants do not yet look for factfile.md on their own, so sites need to link to it.
-- The tools run from a terminal and need Node.js 18 or later.
+- The command-line tools need Node.js 18 or later; the web generator needs a browser with JavaScript.
+- There is no platform plugin yet.
 
 ## Software details
 - Platforms: macOS, Windows and Linux, with Node.js 18 or later
-- Install: none needed; the tools run with `npx factfile`
+- Install: none needed; use the web generator or run `npx factfile`
 - Source code: https://github.com/factfile-dev/factfile
 - Language: English
-- Data: the tools run on your own computer, and `generate` reads only public pages and respects robots.txt
+- Data: the tools run on your own computer or in your browser; `generate` reads only public pages and respects robots.txt
 
 ## Sources
+- Web generator: https://factfile.dev/generate
 - Tools and licences: https://factfile.dev/tools
 - Specification: https://factfile.dev/spec
 - Source code: https://github.com/factfile-dev/factfile

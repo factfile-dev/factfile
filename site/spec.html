@@ -7,33 +7,95 @@
 <meta name="description" content="The factfile.md specification: file format, sections, profiles, integrity rules, conformance levels and the agent reading protocol.">
 <link rel="canonical" href="https://factfile.dev/spec">
 <link rel="describedby" type="text/markdown" href="/factfile.md" title="factfile.md">
+<link rel="preload" href="/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1418" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="factfile.md">
 <meta property="og:title" content="factfile.md specification v0.1 (draft)">
 <meta property="og:description" content="The factfile.md specification: file format, sections, profiles, integrity rules, conformance levels and the agent reading protocol.">
 <meta property="og:url" content="https://factfile.dev/spec">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://factfile.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="factfile.md: checkable business facts for AI agents">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@factfiledev">
+<meta name="twitter:creator" content="@alankiayi">
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<script src="/site.js" defer></script>
+
 <link rel="alternate" type="text/markdown" href="/spec.md" title="SPEC.md">
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
+<aside aria-label="Announcement"><a class="announce" href="/spec">factfile.md v0.1 is open for public comment. <b>Read the draft</b></a></aside>
 <header class="site-header">
   <div class="wrap">
-    <a class="wordmark" href="/">factfile<span>.md</span></a>
-    <nav aria-label="Main">
-        <a href="/what-is-factfile">What it is</a>
-        <a href="/spec" aria-current="page">Specification</a>
-        <a href="/tools">Tools</a>
-        <a href="/about">About</a>
-        <a href="https://github.com/factfile-dev/factfile">GitHub</a>
+    <a class="wordmark" href="/" aria-label="factfile.md home"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M10 8h12M10 14h12M10 20h7" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/><circle cx="22" cy="22" r="3" fill="#f2c14e"/></svg><span>factfile<span class="ext">.md</span></span></a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="/generate">Generate</a>
+      <a href="/what-is-factfile">What it is</a>
+      <a href="/spec" aria-current="page">Specification</a>
+      <a href="/tools">Tools</a>
+      <a href="/about">About</a>
+      <a class="m-only" href="https://github.com/factfile-dev/factfile">GitHub</a>
+      <a class="m-only" href="/support">Buy me a coffee</a>
+      <a class="m-only btn btn-dark" href="/generate">Generate your file</a>
     </nav>
+    <div class="head-end">
+      <a class="coffee-link" href="https://buymeacoffee.com/alankiayi" target="_blank" rel="noopener" data-coffee="header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg><span>Buy me a coffee</span></a>
+      <a class="flag-link" href="/about#iran" aria-label="I stand with the people of Iran" title="I stand with the people of Iran"><img src="/img/iran-lion-and-sun-emoji.svg" alt="" width="22" height="22"></a>
+      <a class="gh" href="https://github.com/factfile-dev/factfile"><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+      <button class="icon-btn theme-btn" type="button" aria-label="Switch theme"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      <a class="btn btn-dark btn-s" href="/generate">Generate your file</a>
+      <button class="icon-btn menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
   </div>
 </header>
-<main class="wrap">
-<p class="note">Draft for public comment. Also available as <a href="/spec.md">Markdown</a> and on <a href="https://github.com/factfile-dev/factfile/blob/main/SPEC.md">GitHub</a>, where you can open an issue.</p>
+<main id="main" tabindex="-1">
+<div class="wrap page">
+<div class="doc">
+<aside class="toc" aria-label="Contents">
+<p class="toc-title">Contents</p>
+<ol>
+<li><a href="#1-status-and-abstract">1. Status and abstract</a></li>
+<li><a href="#2-conventions-and-design-principles">2. Conventions and design principles</a></li>
+<li><a href="#3-discovery-and-serving">3. Discovery and serving</a></li>
+<li><a href="#4-file-structure">4. File structure</a></li>
+<li><a href="#5-header-field-reference">5. Header field reference</a></li>
+<li><a href="#6-body-sections">6. Body sections</a></li>
+<li><a href="#7-profiles">7. Profiles</a></li>
+<li><a href="#8-integrity-freshness-and-multiple-products">8. Integrity, freshness and multiple products</a></li>
+<li><a href="#9-conformance-levels">9. Conformance levels</a></li>
+<li><a href="#10-agent-reading-protocol-and-security">10. Agent reading protocol and security</a></li>
+<li><a href="#11-complete-examples">11. Complete examples</a></li>
+<li><a href="#12-versioning-open-questions-and-references">12. Versioning, open questions and references</a></li>
+</ol>
+<div class="toc-alt"><a href="/spec.md">Read as Markdown</a><a href="https://github.com/factfile-dev/factfile/issues">Comment on GitHub</a></div>
+</aside>
+<div>
+<p class="callout">Draft for public comment. Also available as <a href="/spec.md">Markdown</a> and on <a href="https://github.com/factfile-dev/factfile/blob/main/SPEC.md">GitHub</a>, where you can open an issue.</p>
+<details class="toc-mobile"><summary>Contents</summary><ol>
+<li><a href="#1-status-and-abstract">1. Status and abstract</a></li>
+<li><a href="#2-conventions-and-design-principles">2. Conventions and design principles</a></li>
+<li><a href="#3-discovery-and-serving">3. Discovery and serving</a></li>
+<li><a href="#4-file-structure">4. File structure</a></li>
+<li><a href="#5-header-field-reference">5. Header field reference</a></li>
+<li><a href="#6-body-sections">6. Body sections</a></li>
+<li><a href="#7-profiles">7. Profiles</a></li>
+<li><a href="#8-integrity-freshness-and-multiple-products">8. Integrity, freshness and multiple products</a></li>
+<li><a href="#9-conformance-levels">9. Conformance levels</a></li>
+<li><a href="#10-agent-reading-protocol-and-security">10. Agent reading protocol and security</a></li>
+<li><a href="#11-complete-examples">11. Complete examples</a></li>
+<li><a href="#12-versioning-open-questions-and-references">12. Versioning, open questions and references</a></li>
+</ol></details>
 <article class="prose spec">
 <h1 id="factfile-md-specification-v0-1-draft">factfile.md Specification v0.1 (Draft)</h1>
 <p>Published 20 October 2026 · Alan Kiayi</p>
-<h2 id="1-status-and-abstract">1. Status and abstract</h2>
+<h2 id="1-status-and-abstract">1. Status and abstract<a class="anchor" href="#1-status-and-abstract" aria-label="Link to this section">#</a></h2>
 <p><strong>factfile.md is a single Markdown file at the root of a website that gives AI agents a complete, checkable description of what a business offers, who it is for, what it costs and how to start.</strong> It is designed so agents can compare offerings accurately and so that dishonest files are easy to detect.</p>
 <ul>
 <li><strong>Status:</strong> Draft for public comment. Not yet stable; fields may change before v1.0.</li>
@@ -41,17 +103,17 @@
 <li><strong>Author:</strong> Alan Kiayi</li>
 <li><strong>Licence:</strong> This specification is published under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Anyone may use, implement and adapt it with attribution. Reference tools are MIT-licensed. The name factfile.md is not licensed under CC BY; adapted or forked versions MUST use a different name.</li>
 </ul>
-<h3 id="what-factfile-md-is-not">What factfile.md is not</h3>
+<h3 id="what-factfile-md-is-not">What factfile.md is not<a class="anchor" href="#what-factfile-md-is-not" aria-label="Link to this section">#</a></h3>
 <ul>
 <li>Not a navigation index. That is <a href="https://llmstxt.org/">llms.txt</a>.</li>
 <li>Not a list of callable tools or agents. That is MCP server cards, A2A agent cards and ai-catalog.json.</li>
 <li>Not a product catalogue or checkout protocol. That is ACP and UCP product feeds.</li>
 </ul>
 <p>factfile.md is the <strong>decision layer</strong> above these: the facts an agent needs to decide whether to recommend a business, then pointers to the systems that let it act.</p>
-<h2 id="2-conventions-and-design-principles">2. Conventions and design principles</h2>
+<h2 id="2-conventions-and-design-principles">2. Conventions and design principles<a class="anchor" href="#2-conventions-and-design-principles" aria-label="Link to this section">#</a></h2>
 <p>The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are used as described in <a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a> and <a href="https://www.rfc-editor.org/rfc/rfc8174">RFC 8174</a> when written in capitals.</p>
 <p><strong>Publisher</strong> = the business that publishes the file. <strong>Agent</strong> = any AI system that reads it.</p>
-<h3 id="principles">Principles</h3>
+<h3 id="principles">Principles<a class="anchor" href="#principles" aria-label="Link to this section">#</a></h3>
 <p>Every rule in this specification follows from one of these. When a rule is unclear, the principles decide.</p>
 <ol>
 <li><strong>Facts, not persuasion.</strong> Statements are verifiable. Superlatives and marketing adjectives are not facts.</li>
@@ -62,10 +124,10 @@
 <li><strong>Points, does not duplicate.</strong> Links to catalogues, APIs, documentation and checkout rather than copying them.</li>
 <li><strong>Data, never instructions.</strong> The file describes the business. It never tells an agent what to do.</li>
 </ol>
-<h2 id="3-discovery-and-serving">3. Discovery and serving</h2>
+<h2 id="3-discovery-and-serving">3. Discovery and serving<a class="anchor" href="#3-discovery-and-serving" aria-label="Link to this section">#</a></h2>
 <p><strong>A publisher MUST serve the file at <code>/factfile.md</code> on its main domain, identically to every visitor.</strong></p>
-<h3 id="locations">Locations</h3>
-<table>
+<h3 id="locations">Locations<a class="anchor" href="#locations" aria-label="Link to this section">#</a></h3>
+<div class="table-scroll"><table>
 <thead>
 <tr>
 <th>Location</th>
@@ -84,18 +146,18 @@
 <td>A human-readable page, e.g. <code>https://&lt;domain&gt;/factfile</code></td>
 <td>SHOULD. Shows the same facts as a normal web page and is named in the <code>human_page</code> field.</td>
 </tr>
-</tbody></table>
-<h3 id="serving-rules">Serving rules</h3>
+</tbody></table></div>
+<h3 id="serving-rules">Serving rules<a class="anchor" href="#serving-rules" aria-label="Link to this section">#</a></h3>
 <ol>
 <li>Served over HTTPS with <code>Content-Type: text/markdown; charset=utf-8</code> (or <code>text/plain</code>).</li>
 <li>MUST be the same content for every user agent and IP address. Serving agents different facts than people (cloaking) makes the file non-conformant.</li>
 <li>MUST NOT require JavaScript, login, cookies or a challenge page. Bot protection SHOULD allow this path. At most one redirect is allowed, and it MUST stay within the same registrable domain.</li>
 <li>SHOULD send <code>Last-Modified</code> or <code>ETag</code> so agents can re-fetch efficiently.</li>
 </ol>
-<h3 id="signposts">Signposts</h3>
+<h3 id="signposts">Signposts<a class="anchor" href="#signposts" aria-label="Link to this section">#</a></h3>
 <p><strong>Agents do not look for <code>/factfile.md</code> by themselves until they are built to, so publishers SHOULD point to it from their own pages.</strong> Most agent fetch tools turn a page into plain text and keep only its main content: navigation, footers and the <code>&lt;head&gt;</code> are often dropped, and long pages are cut short. So the signpost most likely to reach an agent is a link in the home page&#39;s main content, near the top, leading to a human page whose first lines are the facts themselves. The other signposts back it up for tools that keep more of the page.</p>
 <p>Publishers SHOULD add these five signposts, in this order of importance:</p>
-<table>
+<div class="table-scroll"><table>
 <thead>
 <tr>
 <th>#</th>
@@ -134,7 +196,7 @@
 <td>SHOULD</td>
 <td><code>&lt;link rel=&quot;describedby&quot; type=&quot;text/markdown&quot; href=&quot;/factfile.md&quot; title=&quot;factfile.md&quot;&gt;</code> and <code>Link: &lt;/factfile.md&gt;; rel=&quot;describedby&quot;; type=&quot;text/markdown&quot;; title=&quot;factfile.md&quot;</code></td>
 </tr>
-</tbody></table>
+</tbody></table></div>
 <p>The human page SHOULD also be listed in <code>sitemap.xml</code>, so search engines index the facts and AI search tools find them even when they never fetch the file. An entry in <code>/.well-known/ai-catalog.json</code>, where present, MAY point to the file.</p>
 <p>Rules for signposts:</p>
 <ol>
@@ -143,7 +205,7 @@
 <li>The <code>describedby</code> link and header MUST carry <code>title=&quot;factfile.md&quot;</code>. Other files (for example <code>llms.txt</code>) also use <code>describedby</code>, and the title is how an agent tells them apart.</li>
 </ol>
 <p>The link relation is <code>describedby</code>, a registered link type meaning &quot;a resource that describes this one&quot;. It needs no new registration.</p>
-<h2 id="4-file-structure">4. File structure</h2>
+<h2 id="4-file-structure">4. File structure<a class="anchor" href="#4-file-structure" aria-label="Link to this section">#</a></h2>
 <p><strong>A factfile.md file has four parts in a fixed order: header, Verdict, sections, then Sources and an end marker.</strong></p>
 <ol>
 <li><strong>Header.</strong> YAML front matter between <code>---</code> lines, with the fields in Section 5. Exact values for scripts, validators and comparison.</li>
@@ -151,18 +213,18 @@
 <li><strong>Sections.</strong> Level-2 headings in the order given in Section 6, then any profile sections (Section 7).</li>
 <li><strong>Sources and end marker.</strong> The <code>## Sources</code> section, then the exact line <code>&lt;!-- end of factfile.md --&gt;</code> as the last line.</li>
 </ol>
-<h3 id="size-and-encoding">Size and encoding</h3>
+<h3 id="size-and-encoding">Size and encoding<a class="anchor" href="#size-and-encoding" aria-label="Link to this section">#</a></h3>
 <ul>
 <li>The file MUST be UTF-8 Markdown (<a href="https://commonmark.org/">CommonMark</a>) with YAML 1.2 front matter.</li>
 <li>The Verdict MUST end within the first 2,500 characters of the file, header included, so it survives truncation. The Verdict itself SHOULD be under 700 characters.</li>
 <li>The whole file SHOULD stay under 8,000 characters and MUST stay under 16,000. Longer detail belongs in linked pages.</li>
 <li>Headings MUST use the exact names in this specification, in English, so agents can find them. Content MAY be in any language; set <code>language</code> in the header.</li>
 </ul>
-<h3 id="why-the-end-marker">Why the end marker</h3>
+<h3 id="why-the-end-marker">Why the end marker<a class="anchor" href="#why-the-end-marker" aria-label="Link to this section">#</a></h3>
 <p>Many agent fetch tools cut long content and do not tell the model. A missing end marker tells an agent it did not read the whole file and SHOULD fetch the rest or treat its picture as partial.</p>
-<h2 id="5-header-field-reference">5. Header field reference</h2>
+<h2 id="5-header-field-reference">5. Header field reference<a class="anchor" href="#5-header-field-reference" aria-label="Link to this section">#</a></h2>
 <p><strong>Eight fields are required in every file; the rest raise the conformance level.</strong> Dates use <a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a> (<code>YYYY-MM-DD</code>); currencies use <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO 4217</a> codes (<code>GBP</code>, <code>USD</code>, <code>EUR</code>). Fixed lists are written in <code>code</code>.</p>
-<table>
+<div class="table-scroll"><table>
 <thead>
 <tr>
 <th>Field</th>
@@ -315,11 +377,11 @@
 <td>MAY</td>
 <td>For multi-product publishers: links to per-product files (Section 8.3)</td>
 </tr>
-</tbody></table>
+</tbody></table></div>
 <p>Unknown fields MUST be ignored by agents. Publishers MAY add their own fields under an <code>x_</code> prefix (e.g. <code>x_internal_id</code>).</p>
-<h2 id="6-body-sections">6. Body sections</h2>
+<h2 id="6-body-sections">6. Body sections<a class="anchor" href="#6-body-sections" aria-label="Link to this section">#</a></h2>
 <p><strong>After a level-1 title with the business name, sections appear in this order, with these exact headings.</strong> Each section MUST make sense on its own, because agents often retrieve single passages rather than whole files.</p>
-<table>
+<div class="table-scroll"><table>
 <thead>
 <tr>
 <th>Order</th>
@@ -388,8 +450,8 @@
 <td>MUST</td>
 <td>Every page cited in the file</td>
 </tr>
-</tbody></table>
-<h3 id="6-1-verdict">6.1 Verdict</h3>
+</tbody></table></div>
+<h3 id="6-1-verdict">6.1 Verdict<a class="anchor" href="#6-1-verdict" aria-label="Link to this section">#</a></h3>
 <p>The Verdict MUST contain exactly these five labelled lines, in this order, each one plain sentence:</p>
 <ul>
 <li><strong>What:</strong> what it is, in plain words.</li>
@@ -399,29 +461,29 @@
 <li><strong>Next step:</strong> the single action a customer takes first, with a link.</li>
 </ul>
 <p>The Verdict MUST NOT contradict the header, and its facts MUST also appear in the sections below.</p>
-<h3 id="6-2-fit">6.2 Fit</h3>
+<h3 id="6-2-fit">6.2 Fit<a class="anchor" href="#6-2-fit" aria-label="Link to this section">#</a></h3>
 <ul>
 <li><code>### Not for</code> MUST contain at least one item. Honest exclusions are what let agents recommend correctly.</li>
 <li>Items describe customers or needs (&quot;teams over 50 people&quot;), not judgements (&quot;people who want the best&quot;). Not for describes types of customer or need; missing features belong in Limitations.</li>
 </ul>
-<h3 id="6-3-how-it-differs">6.3 How it differs</h3>
+<h3 id="6-3-how-it-differs">6.3 How it differs<a class="anchor" href="#6-3-how-it-differs" aria-label="Link to this section">#</a></h3>
 <ul>
 <li>Each item MUST be a checkable fact: a capability, a limit, a policy or a number with its source.</li>
 <li>MUST NOT name or disparage competitors. Comparison is the agent&#39;s job, made possible by identical fields across files.</li>
 </ul>
-<h3 id="6-4-evidence">6.4 Evidence</h3>
+<h3 id="6-4-evidence">6.4 Evidence<a class="anchor" href="#6-4-evidence" aria-label="Link to this section">#</a></h3>
 <ul>
 <li>Links only, each with a short label: review platforms, app store pages, certifications, regulator registrations, independent press.</li>
 <li>MUST NOT link to pages whose content the publisher controls. Platform pages where others post ratings or reviews (app stores, review sites, map listings) count as independent. MUST NOT quote ratings or reviews. Agents fetch and judge the evidence themselves.</li>
 </ul>
-<h3 id="6-5-limitations">6.5 Limitations</h3>
+<h3 id="6-5-limitations">6.5 Limitations<a class="anchor" href="#6-5-limitations" aria-label="Link to this section">#</a></h3>
 <ul>
 <li>At least one item. Platforms, regions, sizes, integrations or uses that are not supported.</li>
 <li>Limitations sit near the end deliberately: models recall the start and end of a document best.</li>
 </ul>
-<h2 id="7-profiles">7. Profiles</h2>
+<h2 id="7-profiles">7. Profiles<a class="anchor" href="#7-profiles" aria-label="Link to this section">#</a></h2>
 <p><strong>A profile adds one section after Limitations; it never changes the core.</strong> A file declares its profiles in <code>type</code> and MUST include the section for each one, headed exactly as below. A business MAY declare more than one (e.g. <code>[software, service]</code>).</p>
-<table>
+<div class="table-scroll"><table>
 <thead>
 <tr>
 <th>Profile</th>
@@ -472,15 +534,15 @@
 <td><code>## Organisation details</code></td>
 <td>Mission, who it helps, how to get help, how to donate or volunteer, registration number</td>
 </tr>
-</tbody></table>
-<h3 id="boundaries">Boundaries</h3>
+</tbody></table></div>
+<h3 id="boundaries">Boundaries<a class="anchor" href="#boundaries" aria-label="Link to this section">#</a></h3>
 <ul>
 <li>A <code>store</code> MUST NOT list its catalogue in factfile.md. It describes the business and links to the product feed.</li>
 <li>New profiles (e.g. <code>event</code>, <code>marketplace</code>, <code>job</code>) will be added in later versions without changing existing ones.</li>
 </ul>
-<h2 id="8-integrity-freshness-and-multiple-products">8. Integrity, freshness and multiple products</h2>
+<h2 id="8-integrity-freshness-and-multiple-products">8. Integrity, freshness and multiple products<a class="anchor" href="#8-integrity-freshness-and-multiple-products" aria-label="Link to this section">#</a></h2>
 <p><strong>These rules make a dishonest file easy to detect. Breaking any of the MUST rules makes the file non-conformant.</strong></p>
-<h3 id="8-1-integrity-rules">8.1 Integrity rules</h3>
+<h3 id="8-1-integrity-rules">8.1 Integrity rules<a class="anchor" href="#8-1-integrity-rules" aria-label="Link to this section">#</a></h3>
 <ol>
 <li><strong>Visible parity.</strong> Every fact in the file MUST also appear on a page people can see on the publisher&#39;s site. Facts that exist only for agents are not allowed.</li>
 <li><strong>Receipts.</strong> Every price, number, statistic, date-bound offer or certification MUST link to a live page that states it, inline or in <code>## Sources</code>.</li>
@@ -491,21 +553,21 @@
 <li><strong>Claims and evidence stay separate.</strong> The publisher&#39;s own statements never sit in <code>## Evidence</code>, and third-party material is never presented as the publisher&#39;s claim.</li>
 <li><strong>Accountability.</strong> The file is a public statement by the publisher about its own offering. Publishers SHOULD treat it with the same care as any other marketing claim on their website, which consumer and advertising law already covers in many countries.</li>
 </ol>
-<h3 id="8-2-freshness">8.2 Freshness</h3>
+<h3 id="8-2-freshness">8.2 Freshness<a class="anchor" href="#8-2-freshness" aria-label="Link to this section">#</a></h3>
 <ul>
 <li><code>review_by</code> MUST be no more than 6 months after <code>last_verified</code>.</li>
 <li>Prices and offers change fastest. Publishers SHOULD update the file within 7 days of any change to them, ideally by generating it automatically from the same data as the website.</li>
 <li>After <code>review_by</code> has passed, agents SHOULD treat prices, offers and availability as unverified and check the receipts.</li>
 </ul>
-<h3 id="8-3-multiple-products">8.3 Multiple products</h3>
+<h3 id="8-3-multiple-products">8.3 Multiple products<a class="anchor" href="#8-3-multiple-products" aria-label="Link to this section">#</a></h3>
 <ul>
 <li>A publisher with several distinct offerings SHOULD publish a root <code>/factfile.md</code> describing the company, with a <code>products</code> list in the header linking to one file per offering at <code>/factfile/&lt;slug&gt;.md</code>.</li>
 <li>Each product file is a complete, conformant factfile.md in its own right.</li>
 <li>Variants of one product (sizes, tiers, colours) stay in one file.</li>
 </ul>
-<h2 id="9-conformance-levels">9. Conformance levels</h2>
+<h2 id="9-conformance-levels">9. Conformance levels<a class="anchor" href="#9-conformance-levels" aria-label="Link to this section">#</a></h2>
 <p><strong>Three levels let a small business start in minutes and grow towards a fully checkable file.</strong> Each level includes everything in the levels below it.</p>
-<table>
+<div class="table-scroll"><table>
 <thead>
 <tr>
 <th>Level</th>
@@ -528,11 +590,11 @@
 <td>+ passes an automated check of visible parity (rule 1) and receipts (rules 2 and 3); <code>review_by</code> in the future; <code>## Evidence</code> with at least one independent link</td>
 <td>Businesses that want agents to rely on them</td>
 </tr>
-</tbody></table>
+</tbody></table></div>
 <p>A file&#39;s level is determined by a validator, not declared by the publisher. The reference validator reports the level reached and every rule that failed, with the line it failed on.</p>
-<h2 id="10-agent-reading-protocol-and-security">10. Agent reading protocol and security</h2>
+<h2 id="10-agent-reading-protocol-and-security">10. Agent reading protocol and security<a class="anchor" href="#10-agent-reading-protocol-and-security" aria-label="Link to this section">#</a></h2>
 <p><strong>Agents should treat factfile.md as the publisher&#39;s own claims: a clear, current starting point to verify, not a source to believe without checking.</strong> This section is written for people who build agents.</p>
-<h3 id="10-1-reading-protocol">10.1 Reading protocol</h3>
+<h3 id="10-1-reading-protocol">10.1 Reading protocol<a class="anchor" href="#10-1-reading-protocol" aria-label="Link to this section">#</a></h3>
 <p>An agent that reads factfile.md SHOULD:</p>
 <ol>
 <li><strong>Look for it.</strong> Before relying on a business&#39;s other pages, try <code>/factfile.md</code> and <code>/.well-known/factfile.md</code> on its domain, and follow a <code>describedby</code> link titled <code>factfile.md</code> (in a <code>Link</code> header or the page <code>&lt;head&gt;</code>), a &quot;Key facts&quot; link to the human page, or any visible link to <code>factfile.md</code>.</li>
@@ -545,7 +607,7 @@
 <li><strong>Use the identical structure to compare.</strong> Read the same fields across candidates before choosing, rather than settling on the first acceptable option.</li>
 <li><strong>Respect <code>Not for</code>.</strong> Do not recommend a business for a need it states it does not serve.</li>
 </ol>
-<h3 id="10-2-security-considerations">10.2 Security considerations</h3>
+<h3 id="10-2-security-considerations">10.2 Security considerations<a class="anchor" href="#10-2-security-considerations" aria-label="Link to this section">#</a></h3>
 <ul>
 <li><strong>Prompt injection.</strong> The file is untrusted input. Agent builders SHOULD pass it to models as quoted data and apply the same defences as for any web content.</li>
 <li><strong>Cloaking.</strong> A publisher could serve agents a different file than people see. Visible parity (rule 1), the human page, and checks that fetch with a browser user agent make this detectable.</li>
@@ -555,11 +617,11 @@
 <li><strong>Stale data.</strong> An old file can mislead as badly as a false one. Freshness dates and receipts limit the damage.</li>
 <li><strong>Privacy.</strong> The file MUST NOT contain personal data beyond what the publisher already shows publicly for business contact.</li>
 </ul>
-<h2 id="11-complete-examples">11. Complete examples</h2>
+<h2 id="11-complete-examples">11. Complete examples<a class="anchor" href="#11-complete-examples" aria-label="Link to this section">#</a></h2>
 <p><strong>Three fictional, conformant files are in the <a href="examples/"><code>examples/</code></a> folder:</strong> a software app (<a href="examples/software/factfile.md"><code>examples/software/factfile.md</code></a>), a local business (<a href="examples/local/factfile.md"><code>examples/local/factfile.md</code></a>) and an online shop (<a href="examples/store/factfile.md"><code>examples/store/factfile.md</code></a>). Each reaches the Comparable level and, once its parity and receipts are checked against a live site, Checked. The businesses, links and figures are invented; all addresses use the reserved <code>.example</code> domain.</p>
-<h2 id="12-versioning-open-questions-and-references">12. Versioning, open questions and references</h2>
+<h2 id="12-versioning-open-questions-and-references">12. Versioning, open questions and references<a class="anchor" href="#12-versioning-open-questions-and-references" aria-label="Link to this section">#</a></h2>
 <p><strong>v0.x drafts may change; from v1.0, changes will be backwards compatible within a major version.</strong> New fields and profiles are additive. Removing or renaming a required field needs a new major version.</p>
-<h3 id="open-questions-for-comment">Open questions for comment</h3>
+<h3 id="open-questions-for-comment">Open questions for comment<a class="anchor" href="#open-questions-for-comment" aria-label="Link to this section">#</a></h3>
 <ul>
 <li><strong>Signatures.</strong> Should a later version add an optional signature or <code>did:web</code> identity, so cached copies can be verified?</li>
 <li><strong>Category vocabulary.</strong> When should free-text <code>category</code> become a controlled list, and based on which taxonomy?</li>
@@ -569,7 +631,7 @@
 <li><strong>Governance.</strong> Should the specification move to a neutral home once it has independent implementers?</li>
 </ul>
 <p>Comments are welcome as <a href="https://github.com/factfile-dev/factfile/issues">GitHub issues</a>.</p>
-<h3 id="references">References</h3>
+<h3 id="references">References<a class="anchor" href="#references" aria-label="Link to this section">#</a></h3>
 <ul>
 <li><a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a> and <a href="https://www.rfc-editor.org/rfc/rfc8174">RFC 8174</a>: requirement keywords</li>
 <li><a href="https://www.rfc-editor.org/rfc/rfc8615">RFC 8615</a>: well-known URIs</li>
@@ -578,12 +640,63 @@
 <li><a href="https://developers.google.com/search/docs/appearance/structured-data/sd-policies">Google structured data guidelines</a>: the visible-content precedent for rule 1</li>
 </ul>
 </article>
+<aside class="coffee-band slim" aria-label="Support factfile.md" style="margin-top:3rem">
+  <div class="cup small" aria-hidden="true"><svg viewBox="0 0 160 160"><g class="steam" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M60 46c-8-10 8-16 0-28"/><path d="M80 46c-8-10 8-16 0-28"/><path d="M100 46c-8-10 8-16 0-28"/></g><path d="M34 60h92v34a34 34 0 01-34 34H68a34 34 0 01-34-34z" fill="#fff" stroke="#111215" stroke-width="5" stroke-linejoin="round"/><path d="M126 70h8a14 14 0 010 28h-8" fill="none" stroke="#111215" stroke-width="5"/><path d="M42 72h76v20a26 26 0 01-26 26H68a26 26 0 01-26-26z" fill="#c98a4b"/><path d="M50 78c18 6 42 6 60 0" fill="none" stroke="#e6b17a" stroke-width="4" stroke-linecap="round"/></svg></div>
+  <div><h2>Made it to the end?</h2><p class="sub">This specification is written and maintained independently. If it was useful, a coffee helps keep it going.</p></div>
+  <div class="hero-actions"><a class="btn btn-coffee btn-l" href="https://buymeacoffee.com/alankiayi" target="_blank" rel="noopener" data-coffee="spec"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg>Buy me a coffee</a></div>
+</aside>
+</div>
+</div>
+</div>
 </main>
 <footer class="site-footer">
   <div class="wrap">
-    <p><a href="/factfile.md">Key facts (factfile.md)</a> · <a href="/spec">Specification</a> · <a href="https://github.com/factfile-dev/factfile">GitHub</a> · <a href="mailto:hello@factfile.dev">hello@factfile.dev</a></p>
-    <p>factfile.md, created by <a href="/about">Alan Kiayi</a>. Specification licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; tools licensed MIT.</p>
+    <div class="foot">
+      <div class="brand">
+        <a class="wordmark" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M10 8h12M10 14h12M10 20h7" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/><circle cx="22" cy="22" r="3" fill="#f2c14e"/></svg><span>factfile<span class="ext">.md</span></span></a>
+        <p>The facts AI needs, in one file you control.</p>
+        <a class="btn btn-dark btn-s" href="/generate">Generate your file</a>
+        <ul class="socials">
+          <li><a href="https://x.com/factfiledev" aria-label="factfile.md on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.3l7.3-8.3L1 2h6.4l4.4 5.8zm-1.1 18h1.7L6.3 3.9H4.5z"/></svg></a></li>
+          <li><a href="https://x.com/alankiayi" rel="me" aria-label="Alan Kiayi on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.3l7.3-8.3L1 2h6.4l4.4 5.8zm-1.1 18h1.7L6.3 3.9H4.5z"/></svg><span>Alan</span></a></li>
+          <li><a href="https://www.linkedin.com/in/alankiayi/" rel="me" aria-label="Alan Kiayi on LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.13 2.06 2.06 0 010 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a></li>
+        </ul>
+      </div>
+      <nav aria-label="Standard"><h2>Standard</h2><ul>
+        <li><a href="/what-is-factfile">What it is</a></li>
+        <li><a href="/spec">Specification</a></li>
+        <li><a href="/spec.md">Specification (Markdown)</a></li>
+        <li><a href="/factfile.md">Key facts (factfile.md)</a></li>
+      </ul></nav>
+      <nav aria-label="Tools"><h2>Tools</h2><ul>
+        <li><a href="/generate">Generator (in your browser)</a></li>
+        <li><a href="/tools">Command-line tools</a></li>
+        <li><a href="https://www.npmjs.com/package/factfile">npm package</a></li>
+        <li><a href="https://github.com/factfile-dev/factfile/tree/main/examples">Examples</a></li>
+      </ul></nav>
+      <nav aria-label="Project"><h2>Project</h2><ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="https://github.com/factfile-dev/factfile">GitHub</a></li>
+        <li><a href="https://github.com/factfile-dev/factfile/issues">Comment on the draft</a></li>
+        <li><a href="mailto:hello@factfile.dev">hello@factfile.dev</a></li>
+        <li><a href="/support">Buy me a coffee</a></li>
+      </ul></nav>
+    </div>
+    <div class="legal"><span>factfile.md, created by <a href="/about">Alan Kiayi</a>.</span>
+      <a class="solidarity" href="/about#iran"><img src="/img/iran-lion-and-sun-emoji.svg" alt="" width="20" height="20">I stand with the people of Iran</a><span>Specification <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Tools MIT.</span></div>
   </div>
 </footer>
+<div class="kofi" data-kofi hidden>
+  <div class="kofi-panel" id="kofi-panel" role="dialog" aria-labelledby="kofi-title" hidden>
+    <button class="kofi-close" type="button" aria-label="Close and hide for a week">&times;</button>
+    <div class="kofi-cup" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg></div>
+    <p class="kofi-title" id="kofi-title">factfile.md is free</p>
+    <p class="kofi-text">No ads, no tracking, no paid tier. If it saved you time, a coffee keeps the specification and tools moving.</p>
+    <a class="btn btn-coffee" href="https://buymeacoffee.com/alankiayi" target="_blank" rel="noopener" data-coffee="widget"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg>Buy me a coffee</a>
+    <a class="kofi-more" href="/support">What it pays for</a>
+  </div>
+  <button class="kofi-btn" type="button" aria-expanded="false" aria-controls="kofi-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg><span>Buy me a coffee</span></button>
+</div>
+<div class="toast" role="status" aria-live="polite" hidden><span class="toast-msg"></span><a class="toast-cta" href="https://buymeacoffee.com/alankiayi" target="_blank" rel="noopener" data-coffee="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg>Buy me a coffee</a><button class="toast-x" type="button" aria-label="Dismiss">&times;</button></div>
 </body>
 </html>

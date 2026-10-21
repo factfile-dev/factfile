@@ -1,39 +1,248 @@
-<!-- {"title": "factfile.md: checkable business facts for AI agents", "description": "factfile.md is an open standard for one Markdown file at a website's root that gives AI agents a business's key facts, each linked to the page that shows it."} -->
-<h1>Checkable business facts for AI agents</h1>
-<p class="lead"><strong>factfile.md</strong> is an open standard for one short Markdown file at the root of a website. It tells AI agents what a business offers, who it is for and not for, what it costs and how to start, with each fact linked to the page that shows it.</p>
-<p>People now ask AI assistants which product, shop or service to choose. The assistant reads websites built for people, where prices sit behind scripts and limits sit in small print, and fills the gaps with guesses.</p>
+<!-- {"title": "factfile.md: checkable business facts for AI agents", "description": "factfile.md is an open standard for one Markdown file at a website's root that gives AI agents a business's key facts, each linked to the page that shows it.", "bare": true} -->
+<section class="hero" aria-labelledby="hero-title">
+  <div class="prop prop-a" aria-hidden="true" data-depth="18"><div><svg viewBox="0 0 120 120"><g transform="rotate(-28 60 60)"><rect x="18" y="48" width="70" height="24" rx="6" fill="#f2c14e"/><rect x="18" y="48" width="70" height="8" rx="4" fill="#ffd970"/><rect x="86" y="52" width="14" height="16" rx="3" fill="#2b2d33"/><path d="M100 54l10 4v4l-10 4z" fill="#f2c14e"/><rect x="26" y="56" width="30" height="3" rx="1.5" fill="#d9a62e"/></g></svg></div></div>
+  <div class="prop prop-b" aria-hidden="true" data-depth="30"><div><svg viewBox="0 0 200 240"><g transform="rotate(-8 100 120)"><path d="M30 20h140v190l-12-8-12 8-12-8-12 8-12-8-12 8-12-8-12 8-12-8-12 8-12-8-12 8z" fill="#fff" stroke="#e3e3e8"/><rect x="48" y="44" width="70" height="8" rx="4" fill="#111215"/><rect x="48" y="64" width="104" height="5" rx="2.5" fill="#e3e3e8"/><rect x="48" y="78" width="88" height="5" rx="2.5" fill="#e3e3e8"/><rect x="48" y="104" width="50" height="5" rx="2.5" fill="#b4b8c0"/><rect x="122" y="102" width="30" height="9" rx="2" fill="rgba(255,204,64,.6)"/><rect x="48" y="122" width="60" height="5" rx="2.5" fill="#b4b8c0"/><rect x="128" y="120" width="24" height="9" rx="2" fill="rgba(255,204,64,.6)"/><path d="M48 150h104" stroke="#111215" stroke-dasharray="3 4"/><rect x="48" y="164" width="40" height="7" rx="3.5" fill="#111215"/><rect x="116" y="162" width="36" height="11" rx="2" fill="rgba(255,204,64,.75)"/></g></svg></div></div>
+  <div class="prop prop-c" aria-hidden="true" data-depth="22"><div><svg viewBox="0 0 140 140"><circle cx="58" cy="58" r="36" fill="rgba(220,235,255,.55)" stroke="#2b2d33" stroke-width="9"/><circle cx="48" cy="46" r="10" fill="#fff" opacity=".8"/><rect x="88" y="84" width="16" height="46" rx="8" transform="rotate(-45 96 107)" fill="#2b2d33"/></svg></div></div>
+  <div class="prop prop-d" aria-hidden="true" data-depth="26"><div><svg viewBox="0 0 180 160"><g transform="rotate(10 90 80)"><rect x="20" y="30" width="140" height="96" rx="10" fill="#fff" stroke="#e3e3e8"/><rect x="20" y="30" width="140" height="22" rx="10" fill="#f6f6f7"/><circle cx="36" cy="41" r="4" fill="#dedee3"/><circle cx="50" cy="41" r="4" fill="#dedee3"/><rect x="34" y="66" width="56" height="7" rx="3.5" fill="#111215"/><rect x="34" y="82" width="110" height="5" rx="2.5" fill="#e3e3e8"/><rect x="34" y="94" width="90" height="5" rx="2.5" fill="#e3e3e8"/><circle cx="138" cy="112" r="20" fill="#12895a"/><path d="M129 112l6 6 12-12" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></svg></div></div>
 
-<div class="cta">
-  <a class="keyfacts" href="/factfile">Key facts: prices, who we serve and how to start</a>
-  <a href="/spec">Read the specification</a>
-</div>
+  <div class="wrap">
+    <a class="pill rise" style="--d:.05s" href="/spec"><span class="live" aria-hidden="true"></span>Open standard, free tools</a>
+    <h1 id="hero-title" class="rise" style="--d:.12s">Facts AI can check</h1>
+    <p class="sub rise" style="--d:.2s">factfile.md is one short Markdown file at the root of your website. It tells AI agents what you offer, who it is for and not for, what it costs and how to start, with each fact linked to the page that shows it.</p>
+    <div class="hero-actions rise" style="--d:.28s">
+      <a class="btn btn-dark btn-l" href="/generate">Generate your file <span class="arr" aria-hidden="true">→</span></a>
+      <a class="btn btn-l" href="/spec">Read the specification</a>
+    </div>
+    <p class="hero-key rise" style="--d:.34s"><a class="link" href="/factfile">Key facts: prices, who we serve and how to start</a></p>
+    <ul class="checks rise" style="--d:.4s">
+      <li><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z"/></svg>A receipt for every price</li>
+      <li><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z"/></svg>Says who it is not for</li>
+      <li><svg viewBox="0 0 20 20" fill="currentColor" aria-hidden="true"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.7-9.3a1 1 0 00-1.4-1.4L9 10.6 7.7 9.3a1 1 0 00-1.4 1.4l2 2a1 1 0 001.4 0l4-4z"/></svg>No superlatives allowed</li>
+    </ul>
 
-<h2>What a file looks like</h2>
-<p>Every file opens with the same five-line Verdict, so an agent can compare businesses line by line. This one is for a fictional dog groomer.</p>
-<div class="file">
-  <div class="file-name">hollybankgrooming.example/factfile.md</div>
-<pre><code>## Verdict
-- **What:** A dog grooming salon in south Birmingham that works by appointment only.
-- **Best for:** Owners of dogs of any size who want a full groom or a bath and brush.
-- **Not for:** Cats or other pets, or dogs that need sedation or veterinary care.
-- **Price:** From £22 for a small-dog bath and brush; full grooms from £40 ([prices](https://hollybankgrooming.example/prices)).
-- **Next step:** Book a time online ([book](https://hollybankgrooming.example/book)).</code></pre>
-</div>
-<p>After the Verdict come fixed sections: Fit, Pricing, How it differs, Evidence, How to start, How agents can use it, Limitations and Sources. See the <a href="https://github.com/factfile-dev/factfile/tree/main/examples">complete examples</a>.</p>
+    <div class="stage" aria-label="Example: a factfile.md for a fictional dog groomer, with each claim linked to its source page" role="img">
+      <div class="doc-card side-card side-l" aria-hidden="true">
+        <div class="t">hollybankgrooming.example/prices</div>
+        <div class="price">£22</div>
+        <div class="row"><span>Small-dog bath and brush</span><b>£22</b></div>
+        <div class="row"><span>Full groom</span><b>from £40</b></div>
+        <span class="seal"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>Matches the file</span>
+      </div>
+      <div class="doc-card file-main" aria-hidden="true">
+        <div class="bar"><i></i><i></i><i></i><span>hollybankgrooming.example/factfile.md</span><span class="ok"><svg width="12" height="12" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 8.5l3 3 7-7"/></svg>Checked</span></div>
+        <div class="body">
+          <div class="h">## Verdict</div>
+          <span class="vline"><b>What:</b> <span class="v">A dog grooming salon that works by appointment only.</span><span class="rc">/about</span></span>
+          <span class="vline"><b>Best for:</b> <span class="v">Owners of dogs of any size who want a full groom or a bath and brush.</span><span class="rc">/services</span></span>
+          <span class="vline no"><b>Not for:</b> <span class="v">Cats or other pets, or dogs that need sedation.</span><span class="rc">required</span></span>
+          <span class="vline"><b>Price:</b> <span class="v">From £22 for a small-dog bath and brush.</span><span class="rc">/prices</span></span>
+          <span class="vline"><b>Next step:</b> <span class="v">Book a time online.</span><span class="rc">/book</span></span>
+        </div>
+      </div>
+      <div class="doc-card side-card side-r" aria-hidden="true">
+        <div class="t">npx factfile validate</div>
+        <div class="lvl"><span class="done">Basic</span><span class="done">Comparable</span><span class="done">Checked</span></div>
+        <div class="row" style="margin-top:.7rem"><span>Problems</span><b>0</b></div>
+      </div>
+    </div>
+  </div>
+</section>
 
-<h2>Why agents can rely on it</h2>
-<ul>
-  <li><strong>Receipts.</strong> Every price and number links to a live page that states it.</li>
-  <li><strong>Visible parity.</strong> Every fact must also appear on the website for people. A validator checks this.</li>
-  <li><strong>Who it is not for.</strong> Every file must say who should look elsewhere, and what the business does not do.</li>
-  <li><strong>No persuasion.</strong> No superlatives, no hidden text and no instructions aimed at AI.</li>
-  <li><strong>Dated.</strong> Each file says when it was last checked and when it will be checked again.</li>
-</ul>
+<section class="marquee-wrap" aria-labelledby="mq-label">
+  <p class="marquee-label" id="mq-label">Works alongside the files and platforms you already use</p>
+  <div class="marquee">
+    <div class="marquee-track">
+      <span class="f">robots.txt</span><span class="f">llms.txt</span><span>schema.org</span><span>MCP cards</span><span>A2A cards</span><span>ACP feeds</span><span>WordPress</span><span>Shopify</span><span>Wix</span><span>Squarespace</span><span>Webflow</span><span>Next.js</span>
+      <span class="f" aria-hidden="true">robots.txt</span><span class="f" aria-hidden="true">llms.txt</span><span aria-hidden="true">schema.org</span><span aria-hidden="true">MCP cards</span><span aria-hidden="true">A2A cards</span><span aria-hidden="true">ACP feeds</span><span aria-hidden="true">WordPress</span><span aria-hidden="true">Shopify</span><span aria-hidden="true">Wix</span><span aria-hidden="true">Squarespace</span><span aria-hidden="true">Webflow</span><span aria-hidden="true">Next.js</span>
+    </div>
+  </div>
+</section>
 
-<h2>Publish one in three steps</h2>
-<ol class="steps">
-  <li><strong>Draft it from your website.</strong> <code>npx factfile generate example.com</code> reads your public pages and writes a draft using only what they say. It marks what only you can answer.</li>
-  <li><strong>Check it.</strong> <code>npx factfile validate factfile.md</code> reports the level the file reaches, Basic, Comparable or Checked, and every problem in plain words.</li>
-  <li><strong>Put it online and signpost it.</strong> Upload it as <code>/factfile.md</code>. The setup guide gives copy-paste links for your site's platform so agents find it.</li>
-</ol>
-<p><a href="/tools">All the tools</a> · <a href="/what-is-factfile">How it relates to llms.txt and schema.org</a></p>
+<section class="section" aria-label="Why it exists">
+  <div class="wrap">
+    <figure class="quote reveal-scale">
+      <svg class="mk" viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="8" fill="currentColor"/><path d="M10 8h12M10 14h12M10 20h7" stroke="#fff" stroke-width="3" stroke-linecap="round"/><circle cx="22" cy="22" r="3" fill="#f2c14e"/></svg>
+      <blockquote><p>A file must say who the business is not for, may not use superlatives, and may not speak to the AI reading it, because a standard that can be gamed would not be worth reading.</p></blockquote>
+      <figcaption><b>Alan Kiayi</b>, creator of factfile.md</figcaption>
+    </figure>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="who-title">
+  <div class="wrap">
+    <div class="section-head center reveal">
+      <span class="pill lilac">Who is it for?</span>
+      <h2 id="who-title">One file shape for every kind of business</h2>
+      <p class="sub">Each kind of business has a profile with a few extra fields. A small business can write a Basic file by hand in ten minutes.</p>
+    </div>
+    <div class="grid-3">
+      <article class="tile reveal" style="--d:0s"><h3><span class="ico sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 10l9-6 9 6v10H3z"/><path d="M9 20v-6h6v6"/></svg></span>Local businesses</h3><p>Salons, trades, clinics and cafés. Area served, booking and opening details in one place.</p></article>
+      <article class="tile reveal" style="--d:.06s"><h3><span class="ico rose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 7h14l-1.5 12h-11z"/><path d="M9 7a3 3 0 016 0"/></svg></span>Online shops</h3><p>Delivery, returns and who you ship to. The file links to your product feed instead of listing it.</p></article>
+      <article class="tile reveal" style="--d:.12s"><h3><span class="ico lilac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="14" rx="2"/><path d="M8 21h8M8 9l3 3-3 3"/></svg></span>Software</h3><p>Plans, platforms and limits stated plainly, so assistants stop guessing what each tier includes.</p></article>
+      <article class="tile reveal" style="--d:0s"><h3><span class="ico mint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0116 0"/></svg></span>Services</h3><p>Consultants and agencies. Who you work with, how engagements start and what you will not take on.</p></article>
+      <article class="tile reveal" style="--d:.06s"><h3><span class="ico butter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 4h12l4 4v12H4z"/><path d="M8 12h8M8 16h5"/></svg></span>Publishers and organisations</h3><p>What you publish or do, who it serves, and how to get involved or get in touch.</p></article>
+      <article class="tile reveal" style="--d:.12s"><h3><span class="ico sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 3v3M12 18v3M3 12h3M18 12h3"/><rect x="7" y="7" width="10" height="10" rx="3"/></svg></span>Agent builders</h3><p>One predictable place to read business facts, with a reading protocol and receipts to verify.</p></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="prob-title">
+  <div class="wrap">
+    <div class="section-head reveal" style="max-width:40rem">
+      <h2 id="prob-title">AI assistants guess when the facts are scattered</h2>
+    </div>
+    <div class="probs">
+      <article class="prob sky reveal" style="--d:0s"><div class="tag">Hidden</div><h3>Prices load from scripts</h3><p>The assistant reads the page before the price appears, so it fills the gap with a guess.</p>
+        <div class="art" aria-hidden="true"><div class="mini"><div class="ln" style="width:60%"></div><div class="price-q"><span class="spin"></span>£ ?</div><div class="ln" style="width:85%"></div></div></div></article>
+      <article class="prob rose reveal" style="--d:.08s"><div class="tag">Buried</div><h3>Limits sit in small print</h3><p>Eligibility, delivery areas and exclusions live in terms pages that nobody quotes back.</p>
+        <div class="art" aria-hidden="true"><div class="mini"><div class="ln" style="width:70%"></div><div class="ln"></div><div class="tiny">Service excludes cats, rabbits and animals requiring sedation. Bookings within 24 hours may be declined. Prices vary by coat condition.</div></div></div></article>
+      <article class="prob lilac reveal" style="--d:.16s"><div class="tag">Missing</div><h3>Nobody says who it is not for</h3><p>Almost no website states it, so assistants recommend businesses to the wrong people.</p>
+        <div class="art" aria-hidden="true"><div class="mini"><b>Not for:</b><div class="slot"><span>Required in every file</span><span class="caret"></span></div></div></div></article>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="rules-title">
+  <div class="wrap">
+    <div class="section-head reveal" style="max-width:40rem">
+      <h2 id="rules-title">Rules that make a dishonest file easy to spot</h2>
+      <p class="sub">Agents are told to treat the file as the publisher’s claims, check the receipts, and respect what the business says it is not for.</p>
+    </div>
+    <div class="feats">
+      <div class="feat reveal"><div class="icos"><span class="ico sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M6 3h12v18l-3-2-3 2-3-2-3 2z"/></svg></span></div><p><b>Receipts.</b> Every price and number links to a live page that states it.</p></div>
+      <div class="feat reveal" style="--d:.06s"><div class="icos"><span class="ico mint"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12z"/><circle cx="12" cy="12" r="2"/></svg></span></div><p><b>Visible parity.</b> Every fact must also appear on the website for people.</p></div>
+      <div class="feat reveal" style="--d:.12s"><div class="icos"><span class="ico rose"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="9"/><path d="M5.6 5.6l12.8 12.8"/></svg></span></div><p><b>Who it is not for.</b> Every file says who should look elsewhere.</p></div>
+      <div class="feat reveal"><div class="icos"><span class="ico lilac"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h10M4 17h6"/></svg></span></div><p><b>No persuasion.</b> No superlatives, hidden text or instructions aimed at AI.</p></div>
+      <div class="feat reveal" style="--d:.06s"><div class="icos"><span class="ico butter"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><rect x="3" y="5" width="18" height="16" rx="2"/><path d="M3 10h18"/></svg></span></div><p><b>Dated.</b> Each file says when it was last checked and when it will be again.</p></div>
+      <div class="feat reveal" style="--d:.12s"><div class="icos"><span class="ico sky"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" aria-hidden="true"><path d="M4 6h16M4 12h16M4 18h16"/></svg></span></div><p><b>Same shape everywhere.</b> A fixed Verdict and sections, so files compare line by line.</p></div>
+    </div>
+    <a class="btn btn-dark reveal" href="/spec">Read the rules in full</a>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="how-title">
+  <div class="wrap">
+    <div class="section-head reveal" style="max-width:40rem">
+      <h2 id="how-title">From your website to a checked file in minutes</h2>
+    </div>
+
+    <div class="show">
+      <div class="show-head reveal"><h3>Draft it from what your website already says</h3><p><b>It never invents a fact.</b> The generator reads your public pages, respects robots.txt, and marks what only you can answer as TODO.</p></div>
+      <div class="canvas sky reveal-scale">
+        <div class="term" data-term aria-label="Terminal example of npx factfile generate" role="img">
+          <div class="tb" aria-hidden="true"><i></i><i></i><i></i></div>
+          <div class="tbody" aria-hidden="true">
+            <div><span class="p">$</span> <span data-type="npx factfile generate hollybankgrooming.example"></span><span class="cursor"></span></div>
+            <div class="out dim">Reading home page and 6 fact pages (robots.txt respected)</div>
+            <div class="out"><span class="ok">✓</span> Prices found on /prices</div>
+            <div class="out"><span class="ok">✓</span> Booking link found on /book</div>
+            <div class="out"><span class="ok">✓</span> Area served found on /about</div>
+            <div class="out"><span class="todo">TODO</span> Who is it not for? Only you can answer this.</div>
+            <div class="out dim">Wrote factfile.md and factfile-setup.md</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="show">
+      <div class="show-head reveal"><h3>Every claim carries its receipt</h3><p><b>Agents check before they repeat.</b> Each price and number in the file links to the live page that states it, and that page must show the same fact to people.</p></div>
+      <div class="canvas butter reveal-scale">
+        <div class="pair" role="img" aria-label="A price line in factfile.md linked to the matching price on the prices page">
+          <div class="pg" aria-hidden="true"><div class="url">factfile.md</div><div class="in" style="font:.8rem/1.6 var(--mono)"><b>Price:</b> From <span class="hl">£22</span> for a small-dog bath and brush (<u>prices</u>)</div></div>
+          <svg class="link-svg" viewBox="0 0 80 32" fill="none" aria-hidden="true"><path d="M2 16h76" stroke="currentColor" stroke-width="2"/><circle cx="2" cy="16" r="3" fill="currentColor"/><circle cx="78" cy="16" r="3" fill="currentColor"/></svg>
+          <div class="pg" aria-hidden="true"><div class="url">hollybankgrooming.example/prices</div><div class="in"><div class="muted" style="font-size:.75rem">Bath and brush, small dog</div><div class="big"><span class="hl">£22</span></div></div></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="show">
+      <div class="show-head reveal"><h3>Check it before agents do</h3><p><b>Three levels, every problem in plain words.</b> Basic, Comparable or Checked, with each issue reported line by line so you know exactly what to fix.</p></div>
+      <div class="canvas mint reveal-scale">
+        <div class="report" data-report role="img" aria-label="Validator report reaching the Checked level with all issues resolved">
+          <div class="top" aria-hidden="true"><b>factfile.md</b><span class="pill mint">Checked</span></div>
+          <div class="meter" aria-hidden="true"><i></i></div>
+          <div class="issue" aria-hidden="true"><span class="st"></span><span>Line 14: <code>Not for</code> is required in the Verdict</span></div>
+          <div class="issue" aria-hidden="true"><span class="st"></span><span>Line 18: price needs a link to the page that states it</span></div>
+          <div class="issue" aria-hidden="true"><span class="st"></span><span>Line 22: remove the word “best”</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="show">
+      <div class="show-head reveal"><h3>Signpost it so agents find it</h3><p><b>Agents do not look for the file on their own yet.</b> Five signposts point them to it, with copy-paste code for your site’s platform.</p></div>
+      <div class="canvas lilac reveal-scale">
+        <div class="posts" data-posts role="img" aria-label="The five signposts">
+          <div class="post" aria-hidden="true"><span class="n">1</span>“Key facts” link on your home page</div>
+          <div class="post" aria-hidden="true"><span class="n">2</span>A human page <code>/factfile</code></div>
+          <div class="post" aria-hidden="true"><span class="n">3</span>A footer link</div>
+          <div class="post" aria-hidden="true"><span class="n">4</span>A line in <code>llms.txt</code></div>
+          <div class="post" aria-hidden="true"><span class="n">5</span>Link tags and a header</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="fits-title">
+  <div class="wrap">
+    <div class="left-head reveal"><h2 id="fits-title">It fills the gap the other files leave</h2><p class="sub">factfile.md replaces none of them. A site can have all of these, and llms.txt can link to factfile.md. <a class="link" href="/what-is-factfile">Full comparison</a></p></div>
+    <div class="table-scroll reveal">
+      <table>
+        <thead><tr><th scope="col">File</th><th scope="col">Tells agents</th></tr></thead>
+        <tbody>
+          <tr><th scope="row"><code>robots.txt</code></th><td>where they may go</td></tr>
+          <tr><th scope="row"><code>llms.txt</code></th><td>where the useful content is</td></tr>
+          <tr><th scope="row">MCP / A2A cards</th><td>what tools they can call</td></tr>
+          <tr class="is-us"><th scope="row"><code>factfile.md</code></th><td><strong>what the business is, who it is for and not for, what it costs, how to start, and what it does not do</strong></td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-label="Safety and freshness">
+  <div class="wrap trust">
+    <div class="reveal"><h3>Data, never instructions</h3><p>The file describes the business. It never tells an agent what to do, and agents are told to ignore any text that tries.</p>
+      <div class="canvas sky" aria-hidden="true"><div class="badge"><svg viewBox="0 0 100 116"><path d="M50 4l42 14v34c0 30-19 50-42 60C27 102 8 82 8 52V18z" fill="var(--sky-ink)"/><path d="M32 56l12 12 24-24" stroke="#fff" stroke-width="8" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg></div></div></div>
+    <div class="reveal" style="--d:.08s"><h3>Dated and reviewable</h3><p>Every file states when it was last verified and when it will be reviewed, so agents can tell a fresh file from a stale one.</p>
+      <div class="canvas lilac" aria-hidden="true"><div class="badge" style="animation-delay:-3s"><svg viewBox="0 0 100 116"><path d="M50 4l42 14v34c0 30-19 50-42 60C27 102 8 82 8 52V18z" fill="var(--lilac-ink)"/><rect x="28" y="38" width="44" height="40" rx="6" fill="none" stroke="#fff" stroke-width="7"/><path d="M28 52h44M40 32v10M60 32v10" stroke="#fff" stroke-width="7" stroke-linecap="round"/></svg></div></div></div>
+  </div>
+</section>
+
+<section class="section cta-final" style="padding-top:0" aria-labelledby="cta-title">
+  <div class="wrap">
+    <span class="pill butter reveal">Free under CC BY 4.0 and MIT</span>
+    <h2 id="cta-title" class="reveal">Publish facts AI can check</h2>
+    <p class="sub reveal">Draft a file from your website right here in your browser, fill in what it flags, and download everything you need.</p>
+    <div class="hero-actions reveal"><a class="btn btn-dark btn-l" href="/generate">Generate your file <span class="arr" aria-hidden="true">→</span></a></div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="coffee-title">
+  <div class="wrap">
+    <div class="coffee-band reveal-scale">
+      <div class="cup small" aria-hidden="true"><svg viewBox="0 0 160 160"><g class="steam" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M60 46c-8-10 8-16 0-28"/><path d="M80 46c-8-10 8-16 0-28"/><path d="M100 46c-8-10 8-16 0-28"/></g><path d="M34 60h92v34a34 34 0 01-34 34H68a34 34 0 01-34-34z" fill="#fff" stroke="#111215" stroke-width="5" stroke-linejoin="round"/><path d="M126 70h8a14 14 0 010 28h-8" fill="none" stroke="#111215" stroke-width="5"/><path d="M42 72h76v20a26 26 0 01-26 26H68a26 26 0 01-26-26z" fill="#c98a4b"/><path d="M50 78c18 6 42 6 60 0" fill="none" stroke="#e6b17a" stroke-width="4" stroke-linecap="round"/></svg></div>
+      <div>
+        <h2 id="coffee-title">Free for everyone, kept going by coffee</h2>
+        <p class="sub">No ads, no tracking, no paid tier. If factfile.md helps you, you can buy me a coffee.</p>
+      </div>
+      <div class="hero-actions">{{DONATE_BTN}}<a class="btn btn-l" href="/support">How it helps</a></div>
+    </div>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0" aria-labelledby="faq-title">
+  <div class="wrap">
+    <div class="section-head center reveal"><h2 id="faq-title">Questions</h2></div>
+    <div class="faq reveal">
+      <details><summary>Does factfile.md cost anything?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>No. The specification is open under CC BY 4.0 and the tools are open source under the MIT licence.</p></div></details>
+      <details><summary>Do AI assistants read factfile.md yet?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Not on their own. That is why the specification asks sites to point to the file with five signposts, including a “Key facts” link on the home page and standard link tags.</p></div></details>
+      <details><summary>How is it different from llms.txt?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>llms.txt is an index of a site’s pages. factfile.md holds the facts themselves in a fixed shape. A site can have both, and llms.txt can link to factfile.md.</p></div></details>
+      <details><summary>Why must I say who my business is not for?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Because it is the fact websites most often leave out, and the one that stops assistants sending you the wrong customers. Every file needs a Not for line and a Limitations section.</p></div></details>
+      <details><summary>Can I write the file by hand?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Yes. A small business can write a Basic file in about ten minutes. The generator is there if you would rather start from what your website already says.</p></div></details>
+      <details><summary>What do I need to make a file?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Nothing, if you use the <a class="link" href="/generate">generator on this site</a>: it runs in your browser. The command-line tools need Node.js 18 or later and run with <code>npx</code>. There is no platform plugin yet.</p></div></details>
+      <details><summary>How is factfile.md funded?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>It is an independent project with no ads or paid tier. If it helps you, you can <a class="link" href="/support">buy me a coffee</a>.</p></div></details>
+      <details><summary>Is the specification stable?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><p>Version 0.1 is a draft for public comment, so fields and headings may change before version 1.0. Comments are welcome as GitHub issues.</p></div></details>
+    </div>
+  </div>
+</section>

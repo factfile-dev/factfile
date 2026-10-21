@@ -7,64 +7,145 @@
 <meta name="description" content="factfile.md is a Markdown file at a website's root that gives AI agents a business's key facts, each linked to the page that shows it. How it compares with llms.txt, schema.org and product feeds.">
 <link rel="canonical" href="https://factfile.dev/what-is-factfile">
 <link rel="describedby" type="text/markdown" href="/factfile.md" title="factfile.md">
+<link rel="preload" href="/fonts/instrument-sans.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="stylesheet" href="/style.css">
 <link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#f6f7f9" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0f1418" media="(prefers-color-scheme: dark)">
+<meta property="og:site_name" content="factfile.md">
 <meta property="og:title" content="What is factfile.md?">
 <meta property="og:description" content="factfile.md is a Markdown file at a website's root that gives AI agents a business's key facts, each linked to the page that shows it. How it compares with llms.txt, schema.org and product feeds.">
 <meta property="og:url" content="https://factfile.dev/what-is-factfile">
 <meta property="og:type" content="website">
+<meta property="og:image" content="https://factfile.dev/og.png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="factfile.md: checkable business facts for AI agents">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@factfiledev">
+<meta name="twitter:creator" content="@alankiayi">
+<script>document.documentElement.classList.add('js');try{var t=localStorage.getItem('theme');if(t)document.documentElement.dataset.theme=t}catch(e){}</script>
+<script src="/site.js" defer></script>
+
 </head>
 <body>
+<a class="skip" href="#main">Skip to content</a>
+<aside aria-label="Announcement"><a class="announce" href="/spec">factfile.md v0.1 is open for public comment. <b>Read the draft</b></a></aside>
 <header class="site-header">
   <div class="wrap">
-    <a class="wordmark" href="/">factfile<span>.md</span></a>
-    <nav aria-label="Main">
-        <a href="/what-is-factfile" aria-current="page">What it is</a>
-        <a href="/spec">Specification</a>
-        <a href="/tools">Tools</a>
-        <a href="/about">About</a>
-        <a href="https://github.com/factfile-dev/factfile">GitHub</a>
+    <a class="wordmark" href="/" aria-label="factfile.md home"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M10 8h12M10 14h12M10 20h7" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/><circle cx="22" cy="22" r="3" fill="#f2c14e"/></svg><span>factfile<span class="ext">.md</span></span></a>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="/generate">Generate</a>
+      <a href="/what-is-factfile" aria-current="page">What it is</a>
+      <a href="/spec">Specification</a>
+      <a href="/tools">Tools</a>
+      <a href="/about">About</a>
+      <a class="m-only" href="https://github.com/factfile-dev/factfile">GitHub</a>
+      <a class="m-only" href="/support">Buy me a coffee</a>
+      <a class="m-only btn btn-dark" href="/generate">Generate your file</a>
     </nav>
+    <div class="head-end">
+      <a class="coffee-link" href="https://buymeacoffee.com/alankiayi" target="_blank" rel="noopener" data-coffee="header"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg><span>Buy me a coffee</span></a>
+      <a class="flag-link" href="/about#iran" aria-label="I stand with the people of Iran" title="I stand with the people of Iran"><img src="/img/iran-lion-and-sun-emoji.svg" alt="" width="22" height="22"></a>
+      <a class="gh" href="https://github.com/factfile-dev/factfile"><svg viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>GitHub</a>
+      <button class="icon-btn theme-btn" type="button" aria-label="Switch theme"><svg class="sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg><svg class="moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg></button>
+      <a class="btn btn-dark btn-s" href="/generate">Generate your file</a>
+      <button class="icon-btn menu-btn" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Menu"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg></button>
+    </div>
   </div>
 </header>
-<main class="wrap">
-<h1>What is factfile.md?</h1>
-<p class="lead"><strong>factfile.md is a Markdown file at the root of a website that gives AI agents a business's key facts (what it offers, who it is for and not for, what it costs and how to start), each linked to the page that shows it.</strong></p>
-
+<main id="main" tabindex="-1">
+<div class="wrap page">
+<header class="page-head">
+  <span class="pill">Explainer</span>
+  <h1>What is factfile.md?</h1>
+</header>
+<div class="prose">
+<p class="def">factfile.md is a Markdown file at the root of a website that gives AI agents a business’s key facts (what it offers, who it is for and not for, what it costs and how to start), each linked to the page that shows it.</p>
 <h2>The problem it solves</h2>
-<p>When someone asks an AI assistant "which one should I choose?", the assistant has to work out a business from pages written for people. Prices load from scripts, limits sit in terms and conditions, and almost no website says who it is <em>not</em> for. The assistant fills the gaps, and its answer can be confidently wrong.</p>
+<p>When someone asks an AI assistant “which one should I choose?”, the assistant has to work out a business from pages written for people. Prices load from scripts, limits sit in terms and conditions, and almost no website says who it is <em>not</em> for. The assistant fills the gaps, and its answer can be confidently wrong.</p>
 <p>factfile.md gives the assistant the facts in one predictable place, in the same shape for every business, with a link to check each one.</p>
 
 <h2>How it works</h2>
-<ol>
-  <li>The business publishes <code>/factfile.md</code>: a short header of fields, a five-line Verdict, then fixed sections such as Fit, Pricing and Limitations.</li>
-  <li>Every price and number links to a live page that states it. Every fact must also be visible to people on the website.</li>
-  <li>The business points to the file from its own pages, so agents find it: a "Key facts" link, a human-readable page at <code>/factfile</code>, a footer link and standard link tags.</li>
-  <li>An agent reads the file, treats it as the business's own claims, checks the links, and respects what the business says it is not for.</li>
+<ol class="how">
+  <li><span>The business publishes <code>/factfile.md</code>: a short header of fields, a five-line Verdict, then fixed sections such as Fit, Pricing and Limitations.</span></li>
+  <li><span>Every price and number links to a live page that states it. Every fact must also be visible to people on the website.</span></li>
+  <li><span>The business points to the file from its own pages, so agents find it: a “Key facts” link, a human-readable page at <code>/factfile</code>, a footer link and standard link tags.</span></li>
+  <li><span>An agent reads the file, treats it as the business’s own claims, checks the links, and respects what the business says it is not for.</span></li>
 </ol>
+</div>
 
-<h2>How it relates to other files</h2>
+<div class="wide-table"><h2 class="prose" style="margin-bottom:1rem;font-size:clamp(1.45rem,1.2rem + 1vw,1.9rem)">How it relates to other files</h2>
+<div class="table-scroll">
 <table>
-  <thead><tr><th>File or format</th><th>What it does</th><th>How factfile.md differs</th></tr></thead>
+  <thead><tr><th scope="col">File or format</th><th scope="col">What it does</th><th scope="col">How factfile.md differs</th></tr></thead>
   <tbody>
-    <tr><td><a href="https://llmstxt.org/">llms.txt</a></td><td>A Markdown index of a site's pages for language models.</td><td>factfile.md holds the facts themselves in a fixed shape, rather than pointing to pages. A site can have both; llms.txt can link to factfile.md.</td></tr>
-    <tr><td><a href="https://schema.org/">schema.org</a> structured data</td><td>Machine-readable details embedded in page code, mainly for search engines.</td><td>factfile.md is plain text an agent reads in one fetch, and adds what structured data rarely carries: who it is not for, limitations and a dated review.</td></tr>
-    <tr><td>Product feeds (ACP, UCP)</td><td>Catalogues and checkout for agents that buy.</td><td>factfile.md describes the business and links to the feed; it never lists the catalogue.</td></tr>
-    <tr><td>robots.txt</td><td>Tells crawlers what they may fetch.</td><td>Unrelated: factfile.md describes the business, not crawling permissions.</td></tr>
+    <tr><th scope="row"><a href="https://llmstxt.org/">llms.txt</a></th><td>A Markdown index of a site’s pages for language models.</td><td>factfile.md holds the facts themselves in a fixed shape, rather than pointing to pages. A site can have both; llms.txt can link to factfile.md.</td></tr>
+    <tr><th scope="row"><a href="https://schema.org/">schema.org</a> structured data</th><td>Machine-readable details embedded in page code, mainly for search engines.</td><td>factfile.md is plain text an agent reads in one fetch, and adds what structured data rarely carries: who it is not for, limitations and a dated review.</td></tr>
+    <tr><th scope="row">Product feeds (ACP, UCP)</th><td>Catalogues and checkout for agents that buy.</td><td>factfile.md describes the business and links to the feed; it never lists the catalogue.</td></tr>
+    <tr><th scope="row">robots.txt</th><td>Tells crawlers what they may fetch.</td><td>Unrelated: factfile.md describes the business, not crawling permissions.</td></tr>
   </tbody>
 </table>
+</div></div>
 
+<div class="prose">
 <h2>Who it is for</h2>
 <p>Any business with a website: software, shops, local businesses, services, products, publishers and organisations each have a profile with a few extra fields. A small business can write a Basic file by hand in ten minutes, or draft one from its website with the <a href="/tools">free tools</a>.</p>
 
 <h2>Status</h2>
 <p>Version 0.1 is a draft for public comment, published in October 2026. Fields and headings may change before version 1.0. Comments are welcome as <a href="https://github.com/factfile-dev/factfile/issues">GitHub issues</a> or by email to <a href="mailto:hello@factfile.dev">hello@factfile.dev</a>.</p>
+<div class="hero-actions" style="justify-content:flex-start;margin-top:1.5rem"><a class="btn btn-dark" href="/tools">Write your file</a><a class="btn" href="/spec">Read the specification</a></div>
+</div>
+</div>
 </main>
 <footer class="site-footer">
   <div class="wrap">
-    <p><a href="/factfile.md">Key facts (factfile.md)</a> · <a href="/spec">Specification</a> · <a href="https://github.com/factfile-dev/factfile">GitHub</a> · <a href="mailto:hello@factfile.dev">hello@factfile.dev</a></p>
-    <p>factfile.md, created by <a href="/about">Alan Kiayi</a>. Specification licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; tools licensed MIT.</p>
+    <div class="foot">
+      <div class="brand">
+        <a class="wordmark" href="/"><svg viewBox="0 0 32 32" aria-hidden="true"><rect width="32" height="32" rx="7" fill="currentColor"/><path d="M10 8h12M10 14h12M10 20h7" stroke="var(--paper)" stroke-width="3" stroke-linecap="round"/><circle cx="22" cy="22" r="3" fill="#f2c14e"/></svg><span>factfile<span class="ext">.md</span></span></a>
+        <p>The facts AI needs, in one file you control.</p>
+        <a class="btn btn-dark btn-s" href="/generate">Generate your file</a>
+        <ul class="socials">
+          <li><a href="https://x.com/factfiledev" aria-label="factfile.md on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.3l7.3-8.3L1 2h6.4l4.4 5.8zm-1.1 18h1.7L6.3 3.9H4.5z"/></svg></a></li>
+          <li><a href="https://x.com/alankiayi" rel="me" aria-label="Alan Kiayi on X"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M18.9 2H22l-6.8 7.8L23.2 22h-6.3l-4.9-6.4L6.4 22H3.3l7.3-8.3L1 2h6.4l4.4 5.8zm-1.1 18h1.7L6.3 3.9H4.5z"/></svg><span>Alan</span></a></li>
+          <li><a href="https://www.linkedin.com/in/alankiayi/" rel="me" aria-label="Alan Kiayi on LinkedIn"><svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 110-4.13 2.06 2.06 0 010 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg></a></li>
+        </ul>
+      </div>
+      <nav aria-label="Standard"><h2>Standard</h2><ul>
+        <li><a href="/what-is-factfile">What it is</a></li>
+        <li><a href="/spec">Specification</a></li>
+        <li><a href="/spec.md">Specification (Markdown)</a></li>
+        <li><a href="/factfile.md">Key facts (factfile.md)</a></li>
+      </ul></nav>
+      <nav aria-label="Tools"><h2>Tools</h2><ul>
+        <li><a href="/generate">Generator (in your browser)</a></li>
+        <li><a href="/tools">Command-line tools</a></li>
+        <li><a href="https://www.npmjs.com/package/factfile">npm package</a></li>
+        <li><a href="https://github.com/factfile-dev/factfile/tree/main/examples">Examples</a></li>
+      </ul></nav>
+      <nav aria-label="Project"><h2>Project</h2><ul>
+        <li><a href="/about">About</a></li>
+        <li><a href="https://github.com/factfile-dev/factfile">GitHub</a></li>
+        <li><a href="https://github.com/factfile-dev/factfile/issues">Comment on the draft</a></li>
+        <li><a href="mailto:hello@factfile.dev">hello@factfile.dev</a></li>
+        <li><a href="/support">Buy me a coffee</a></li>
+      </ul></nav>
+    </div>
+    <div class="legal"><span>factfile.md, created by <a href="/about">Alan Kiayi</a>.</span>
+      <a class="solidarity" href="/about#iran"><img src="/img/iran-lion-and-sun-emoji.svg" alt="" width="20" height="20">I stand with the people of Iran</a><span>Specification <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Tools MIT.</span></div>
   </div>
 </footer>
+<div class="kofi" data-kofi hidden>
+  <div class="kofi-panel" id="kofi-panel" role="dialog" aria-labelledby="kofi-title" hidden>
+    <button class="kofi-close" type="button" aria-label="Close and hide for a week">&times;</button>
+    <div class="kofi-cup" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg></div>
+    <p class="kofi-title" id="kofi-title">factfile.md is free</p>
+    <p class="kofi-text">No ads, no tracking, no paid tier. If it saved you time, a coffee keeps the specification and tools moving.</p>
+    <a class="btn btn-coffee" href="https://buymeacoffee.com/alankiayi" target="_blank" rel="noopener" data-coffee="widget"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg>Buy me a coffee</a>
+    <a class="kofi-more" href="/support">What it pays for</a>
+  </div>
+  <button class="kofi-btn" type="button" aria-expanded="false" aria-controls="kofi-panel"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg><span>Buy me a coffee</span></button>
+</div>
+<div class="toast" role="status" aria-live="polite" hidden><span class="toast-msg"></span><a class="toast-cta" href="https://buymeacoffee.com/alankiayi" target="_blank" rel="noopener" data-coffee="toast"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 9h13v5a5 5 0 01-5 5H9a5 5 0 01-5-5z"/><path d="M17 10h1.5a2.5 2.5 0 010 5H17M8 2.5v3M12 2.5v3"/></svg>Buy me a coffee</a><button class="toast-x" type="button" aria-label="Dismiss">&times;</button></div>
 </body>
 </html>

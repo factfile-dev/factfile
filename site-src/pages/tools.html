@@ -1,34 +1,52 @@
 <!-- {"title": "factfile tools: generate, check and publish factfile.md", "description": "Free, open-source command-line tools to draft a factfile.md from your website, check it, make the human page and set up the signposts."} -->
-<h1>Tools</h1>
-<p class="lead">Free command-line tools to draft, check and publish a factfile.md. They run on your own computer with <code>npx</code>, so there is nothing to install apart from Node.js 18 or later.</p>
-<p>The tools are free and open source under the MIT licence. The specification is free to use under CC BY 4.0. Source code: <a href="https://github.com/factfile-dev/factfile/tree/main/validator">GitHub</a> · Package: <a href="https://www.npmjs.com/package/factfile">npm</a>.</p>
+<header class="page-head">
+  <span class="pill mint">Free and open source</span>
+  <h1>Command-line tools</h1>
+  <p class="sub">Free command-line tools to draft, check and publish a factfile.md. They run on your own computer with <code>npx</code>, so there is nothing to install apart from Node.js 18 or later.</p>
+  <p class="meta">Open source under the MIT licence. Source code on <a href="https://github.com/factfile-dev/factfile/tree/main/validator">GitHub</a>, package on <a href="https://www.npmjs.com/package/factfile">npm</a>.</p>
+  <p class="callout" style="margin-top:1.5rem">Prefer not to use a terminal? The <a href="/generate">generator on this site</a> runs the same code in your browser.</p>
+</header>
 
-<h2>1. Draft a file from your website</h2>
-<pre><code>npx factfile generate example.com</code></pre>
-<p>Reads your home page and up to 10 of the pages most likely to hold facts (prices, booking, contact, services, about, delivery, returns), respecting <code>robots.txt</code>. It writes <code>factfile.md</code> using only what your site visibly says, with a link to the page each fact came from.</p>
-<p><strong>It never invents a fact.</strong> What websites rarely say, such as who a business is not for, is marked <code>TODO</code> for you to answer. The validator will not pass a file until every one is done.</p>
-<p>It also writes <code>factfile-setup.md</code>, a guide to putting the file online for your site's platform.</p>
+<div class="prose">
+<section class="tool reveal" aria-labelledby="t1"><div class="top"><span class="n" aria-hidden="true" style="background:var(--sky);color:var(--sky-ink)">1</span><h2 id="t1">Draft a file from your website</h2></div><div>
+  <div class="cmd"><pre><code>npx factfile generate example.com</code></pre></div>
+  <p>Reads your home page and up to 10 of the pages most likely to hold facts (prices, booking, contact, services, about, delivery, returns), respecting <code>robots.txt</code>. It writes <code>factfile.md</code> using only what your site visibly says, with a link to the page each fact came from.</p>
+  <div class="callout"><p><strong>It never invents a fact.</strong> What websites rarely say, such as who a business is not for, is marked <code>TODO</code> for you to answer. The validator will not pass a file until every one is done.</p></div>
+  <p style="margin-top:1.1rem">It also writes <code>factfile-setup.md</code>, a guide to putting the file online for your site’s platform.</p>
+</div></section>
 
-<h2>2. Check it</h2>
-<pre><code>npx factfile validate factfile.md     # a file on your computer
-npx factfile validate example.com     # the live file, with every online check</code></pre>
-<p>Reports the level the file reaches and every problem, line by line, in plain words:</p>
-<ul>
-  <li><strong>Basic:</strong> the required fields and sections, and no superlatives, hidden text or instructions to AI.</li>
-  <li><strong>Comparable:</strong> adds category, publisher, structured pricing and the profile section.</li>
-  <li><strong>Checked:</strong> every fact is visible on the website and every number links to a live page that states it.</li>
-</ul>
+<section class="tool reveal" aria-labelledby="t2"><div class="top"><span class="n" aria-hidden="true" style="background:var(--lilac);color:var(--lilac-ink)">2</span><h2 id="t2">Check it</h2></div><div>
+  <div class="cmd"><pre><code>npx factfile validate factfile.md     # a file on your computer
+npx factfile validate example.com     # the live file, with every online check</code></pre></div>
+  <p>Reports the level the file reaches and every problem, line by line, in plain words. Each level includes the one before it.</p>
+  <ul class="levels">
+    <li><b>Basic</b><span>The required fields and sections, and no superlatives, hidden text or instructions to AI.</span></li>
+    <li><b>Comparable</b><span>Adds category, publisher, structured pricing and the profile section.</span></li>
+    <li><b>Checked</b><span>Every fact is visible on the website and every number links to a live page that states it.</span></li>
+  </ul>
+</div></section>
 
-<h2>3. Make the human page</h2>
-<pre><code>npx factfile page factfile.md</code></pre>
-<p>Turns the file into a plain "Key facts" web page for <code>/factfile</code>: <code>factfile-page.html</code> to paste into a site builder, or <code>factfile.html</code> as a complete page to upload.</p>
+<section class="tool reveal" aria-labelledby="t3"><div class="top"><span class="n" aria-hidden="true" style="background:var(--mint);color:var(--mint-ink)">3</span><h2 id="t3">Make the human page</h2></div><div>
+  <div class="cmd"><pre><code>npx factfile page factfile.md</code></pre></div>
+  <p>Turns the file into a plain “Key facts” web page for <code>/factfile</code>: <code>factfile-page.html</code> to paste into a site builder, or <code>factfile.html</code> as a complete page to upload. <a href="/factfile">See this site’s own page</a>.</p>
+</div></section>
 
-<h2>4. Make it findable</h2>
-<pre><code>npx factfile setup example.com</code></pre>
-<p>AI agents do not yet look for factfile.md on their own, so your site points to it with five signposts: a "Key facts" link in your home page's main content, the <code>/factfile</code> page, a footer link, a line in <code>llms.txt</code>, and link tags. This writes copy-paste code for each, for WordPress, Shopify, Wix, Squarespace, Webflow, Next.js and common servers, and shows which ones are already in place.</p>
+<section class="tool reveal" aria-labelledby="t4"><div class="top"><span class="n" aria-hidden="true" style="background:var(--rose);color:var(--rose-ink)">4</span><h2 id="t4">Make it findable</h2></div><div>
+  <div class="cmd"><pre><code>npx factfile setup example.com</code></pre></div>
+  <p>AI agents do not yet look for factfile.md on their own, so your site points to it with five signposts: a “Key facts” link in your home page’s main content, the <code>/factfile</code> page, a footer link, a line in <code>llms.txt</code>, and link tags. This writes copy-paste code for each and shows which ones are already in place. Platforms covered:</p>
+  <ul class="platforms"><li>WordPress</li><li>Shopify</li><li>Wix</li><li>Squarespace</li><li>Webflow</li><li>Next.js</li><li>Common servers</li></ul>
+</div></section>
 
-<h2>Limits</h2>
-<ul>
-  <li>The specification is version 0.1, a draft for public comment, so the tools may change before version 1.0.</li>
-  <li>The tools run in a terminal. There is no web version or platform plugin yet.</li>
-</ul>
+<section class="tool reveal" aria-labelledby="t5"><div class="top"><span class="n" aria-hidden="true" style="background:var(--butter);color:var(--butter-ink)">!</span><h2 id="t5">Limits</h2></div><div>
+  <ul>
+    <li>The specification is version 0.1, a draft for public comment, so the tools may change before version 1.0.</li>
+    <li>These tools run in a terminal. The <a href="/generate">web generator</a> does the same in a browser. There is no platform plugin yet.</li>
+  </ul>
+</div></section>
+</div>
+
+<aside class="coffee-band slim reveal-scale" aria-label="Support factfile.md">
+  <div class="cup small" aria-hidden="true"><svg viewBox="0 0 160 160"><g class="steam" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round"><path d="M60 46c-8-10 8-16 0-28"/><path d="M80 46c-8-10 8-16 0-28"/><path d="M100 46c-8-10 8-16 0-28"/></g><path d="M34 60h92v34a34 34 0 01-34 34H68a34 34 0 01-34-34z" fill="#fff" stroke="#111215" stroke-width="5" stroke-linejoin="round"/><path d="M126 70h8a14 14 0 010 28h-8" fill="none" stroke="#111215" stroke-width="5"/><path d="M42 72h76v20a26 26 0 01-26 26H68a26 26 0 01-26-26z" fill="#c98a4b"/><path d="M50 78c18 6 42 6 60 0" fill="none" stroke="#e6b17a" stroke-width="4" stroke-linecap="round"/></svg></div>
+  <div><h2>Did the tools save you time?</h2><p class="sub">They are free and open source. A coffee helps pay for the web version and platform plugins.</p></div>
+  <div class="hero-actions">{{DONATE_BTN}}</div>
+</aside>
