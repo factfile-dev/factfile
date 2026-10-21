@@ -4,7 +4,7 @@ import { aiConfig, improveWithAi } from './ai.js';
 import { crawlSite, GENERATOR_USER_AGENT, readPage } from './crawl.js';
 import { writeDraft } from './draft.js';
 import { brandName, extractFacts } from './extract.js';
-import { detectPlatform, signpostStatus, writeSetupGuide } from '../signposts.js';
+import { detectPlatform, siteSignposts, writeSetupGuide } from '../signposts.js';
 
 /**
  * Build a draft factfile.md from a live website.
@@ -36,7 +36,7 @@ export async function generate(target, { fetch = globalThis.fetch, ai = null, to
 
 /**
  * The setup guide on its own, for a site that already has (or is about to have) a factfile.md:
- * reads only the home page and checks which signposts are in place.
+ * reads the home page and the signpost addresses, and reports what is already in place.
  */
 export async function setupGuide(target, { fetch = globalThis.fetch, today = new Date() } = {}) {
   let start = target.trim();
@@ -50,13 +50,7 @@ export async function setupGuide(target, { fetch = globalThis.fetch, today = new
   const origin = new URL(res.url || start).origin;
   const html = await res.text();
   const page = readPage(origin + '/', html);
-  const status = signpostStatus(html, res.headers);
-  try {
-    const file = await fetch(`${origin}/factfile.md`, { headers: { 'user-agent': GENERATOR_USER_AGENT }, signal: AbortSignal.timeout(12000) });
-    status.fileOnline = file.ok && /factfile_version/.test(await file.text());
-  } catch {
-    status.fileOnline = false;
-  }
+  const status = await siteSignposts(origin, { fetch, homeHtml: html, homeHeaders: res.headers, userAgent: GENERATOR_USER_AGENT });
   const platform = detectPlatform(html, res.headers);
   const name = brandName(page.siteName) || brandName(page.title) || new URL(origin).hostname;
   return { text: writeSetupGuide({ name, origin, platform, status, today }), platform, status, name };

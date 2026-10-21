@@ -4,6 +4,7 @@ Tools for [factfile.md](https://github.com/factfile-dev/factfile):
 
 - **`factfile generate`** writes a first draft from a business's website, using only what the site visibly says.
 - **`factfile setup`** writes copy-paste code to put the file online and make it findable, for the site's own platform.
+- **`factfile page`** turns the file into the human-readable `/factfile` page.
 - **`factfile validate`** checks a file against the specification and reports the level it reaches (**Basic**, **Comparable** or **Checked**) with every problem, line by line, in plain words.
 
 ## Generate a draft
@@ -34,15 +35,30 @@ Found on the site:
 
 ### Make it findable: `factfile-setup.md`
 
-AI agents do not look for `/factfile.md` by themselves yet, so `generate` also writes **`factfile-setup.md`**: a short guide with copy-paste code for the signposts that point to the file.
+AI agents do not look for `/factfile.md` by themselves yet, so `generate` also writes **`factfile-setup.md`**: a short guide with copy-paste code for the five signposts that point to the file. Most agent tools keep only a page's main content and drop menus, footers and the `<head>`, so the order matters:
 
-1. **A visible footer link**, `<a href="/factfile.md">Facts for AI (factfile.md)</a>`. Agents read page text and follow links, so this is the signpost they are most likely to see.
-2. **A link tag** for the page `<head>`, `<link rel="describedby" type="text/markdown" href="/factfile.md" title="factfile.md">`.
-3. **A `Link` header**, with ready-made lines for Apache, Nginx, Netlify, Vercel and Cloudflare.
+1. **A "Key facts" link in the home page's main content**, `<a href="/factfile">Key facts: prices, who we serve and how to start</a>`. This is the signpost an agent is most likely to see.
+2. **The human page** at `/factfile`: the same facts as a plain web page, the Verdict first, ending with a link to the file. `npx factfile page factfile.md` makes it for you.
+3. **A footer link** on every page, `<a href="/factfile.md">Key facts (factfile.md)</a>`.
+4. **A line in `llms.txt`**, if the site has one.
+5. **Machine signposts**: a `<head>` tag, `<link rel="describedby" type="text/markdown" href="/factfile.md" title="factfile.md">`, a `Link` header (ready-made lines for Apache, Nginx, Netlify, Vercel and Cloudflare) and a copy at `/.well-known/factfile.md`.
+
+Link text describes the page for anyone; it never speaks to AI ("AI agents: read this"), which agents are trained to distrust. Links must be visible: the validator fails a hidden signpost link.
 
 It detects the platform the site is built with (WordPress, Shopify, Wix, Squarespace, Webflow, Next.js and others), gives that platform's menu steps, and shows which signposts are already in place. It is honest where a platform cannot host the file at the root yet (Shopify, Wix, Squarespace).
 
 For a site that already has a factfile.md: `npx factfile setup example.com` writes just the guide. Use `--no-setup` to skip it during `generate`.
+
+### Make the human page: `factfile page`
+
+```sh
+npx factfile page factfile.md      # writes factfile.html and factfile-page.html
+```
+
+- **`factfile.html`** is the facts as an HTML block, to paste into a page called "Key facts" at `/factfile` on WordPress, Wix, Squarespace or any site builder.
+- **`factfile-page.html`** is a complete page, for sites where you upload files.
+
+It refuses a file that still has `TODO` lines, so the page always shows finished facts.
 
 ### Optional AI wording
 
@@ -98,7 +114,7 @@ Exit codes: `0` the required level was reached, `1` it was not, `2` the file cou
 
 | Level | Checks |
 | --- | --- |
-| **Basic** | Valid YAML header with the 8 required fields; fixed section order and exact headings; five-line Verdict ending within 2,500 characters; at least one "Not for" and one limitation; Sources; the end marker; size; no repeated claims (rule 4); no instructions to AI, HTML comments or hidden text (rule 5); no superlatives (rule 6); freshness dates. Live only: HTTPS, status 200, at most one same-domain redirect, the same file for browsers and agents (no cloaking), and `url` on the serving domain. Warnings when the home page has no visible link or `describedby` signpost. |
+| **Basic** | Valid YAML header with the 8 required fields; fixed section order and exact headings; five-line Verdict ending within 2,500 characters; at least one "Not for" and one limitation; Sources; the end marker; size; no repeated claims (rule 4); no instructions to AI, HTML comments or hidden text (rule 5); no superlatives (rule 6); freshness dates. Live only: HTTPS, status 200, at most one same-domain redirect, the same file for browsers and agents (no cloaking), and `url` on the serving domain. Fails a hidden signpost link or link text addressed to AI; warns for each of the five signposts that is missing. |
 | **Comparable** | `category`, `get_started`, `human_page`, `publisher`; currency and price source when prices are given; valid plans; a section for each declared profile; Evidence links that are independent and do not quote ratings; Price and Next step lines with links. |
 | **Checked** | `review_by` not yet passed; at least one independent Evidence link; statistics with their source; every price and number has a receipt; **every linked page is live, and every price and number in the file appears on the publisher's own pages** (visible parity). |
 

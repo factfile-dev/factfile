@@ -62,10 +62,11 @@ Agents are told to treat the file as the publisher's claims, to check the receip
 
 ```sh
 npx factfile generate example.com   # draft a factfile.md from your website, plus a setup guide
+npx factfile page factfile.md       # turn it into a web page for people (your /factfile page)
 npx factfile validate example.com   # check a live file
 ```
 
-AI agents do not look for `/factfile.md` by themselves yet, so the specification asks sites to point to it: a visible footer link, a `describedby` link tag and a `Link` header. The setup guide gives copy-paste code for each, for your site's platform.
+AI agents do not look for `/factfile.md` by themselves yet, so the specification asks sites to point to it with five signposts: a "Key facts" link in the home page's main content, a human page at `/factfile` that shows the facts first, a footer link, a line in `llms.txt`, and machine signposts (a `describedby` link tag, a `Link` header and a `/.well-known/` copy). The setup guide gives copy-paste code for each, for your site's platform.
 
 The [factfile tool](validator/) drafts a file using only what your website visibly says, leaving clear TODOs for what only you can answer. It then reports the level a file reaches (Basic, Comparable or Checked) and every problem, line by line.
 

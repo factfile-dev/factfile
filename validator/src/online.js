@@ -1,7 +1,7 @@
 import { BROWSER_USER_AGENT, USER_AGENT } from './constants.js';
 import { extractUrls, getField } from './parse.js';
 import { extractFigures, finding, registrableDomain } from './rules.js';
-import { FOOTER_HTML, HEAD_HTML, signpostStatus } from './signposts.js';
+import { FOOTER_HTML, HEAD_HTML, MAIN_HTML, MAIN_TEXT, PAGE_FILE_LINK_HTML, llmsLine, siteSignposts } from './signposts.js';
 
 const TIMEOUT_MS = 10000;
 const MAX_LINKS = 40;
@@ -102,43 +102,65 @@ export async function fetchFactfile(target, { fetch: fetchImpl = globalThis.fetc
       if ((await wk.text()) !== text) {
         add('serving.well-known', 'comparable', 'error', '/.well-known/factfile.md differs from /factfile.md. They must be the same.', null, '§3');
       }
-    } else {
-      add('serving.well-known', 'comparable', 'warning', 'Also serve the same file at /.well-known/factfile.md.', null, '§3');
     }
   } catch {
-    add('serving.well-known', 'comparable', 'warning', 'Also serve the same file at /.well-known/factfile.md.', null, '§3');
+    /* reported by the signpost checks */
   }
 
   return { text, finalUrl: url, findings };
 }
 
 /**
- * Discovery (Section 3): agents do not look for factfile.md by themselves, so the home page
- * should point to it: a visible link (the one agents reading page text will see), and a
- * describedby link tag or Link header (for tools that read page code or headers).
+ * Discovery (Section 3): the five signposts that lead agents to the file. Most are SHOULD
+ * (warnings); hidden links and link text aimed at AI break MUST rules (errors).
  */
 export async function checkSignposts(homeUrl, { fetch: fetchImpl = globalThis.fetch } = {}) {
   const findings = [];
   const add = (...a) => findings.push(finding(...a));
-  let res;
+  const origin = new URL(homeUrl).origin;
+  let s;
   try {
-    res = await fetchImpl(homeUrl, {
-      redirect: 'follow',
-      headers: { 'user-agent': BROWSER_USER_AGENT, accept: 'text/html,application/xhtml+xml' },
-      signal: AbortSignal.timeout(TIMEOUT_MS),
-    });
+    s = await siteSignposts(origin, { fetch: fetchImpl, userAgent: BROWSER_USER_AGENT });
   } catch {
     return findings;
   }
-  if (!res.ok) return findings;
-  const s = signpostStatus(await res.text(), res.headers);
-  if (!s.visible) {
-    add('signposts.visible', 'comparable', 'warning', `The home page has no visible link to factfile.md. Agents read page text and follow links, so this is the signpost they are most likely to find. Add one to your footer: ${FOOTER_HTML}`, null, '§3');
+
+  if (s.hiddenLinks) {
+    add('signposts.hidden', 'basic', 'error', 'The home page has a hidden link to factfile. Links to the file must be visible to people: hidden links are ignored by most agents and look like cloaking.', null, '§3');
+  }
+  for (const text of s.aiAddressedLinks) {
+    add('signposts.wording', 'basic', 'error', `The link text "${text}" is addressed to AI. Describe what is behind the link instead, e.g. "${MAIN_TEXT}". Agents are trained to distrust instructions on web pages.`, null, '§3');
+  }
+  if (!s.mainLink) {
+    add(
+      'signposts.main',
+      'comparable',
+      'warning',
+      `${s.visible ? 'The only link to factfile is in a footer, menu or sidebar, which many AI tools drop.' : 'The home page has no visible link to factfile.'} Add one near the top of the home page's main content: ${MAIN_HTML}`,
+      null,
+      '§3',
+    );
+  }
+  if (!s.humanPage) {
+    add('signposts.human-page', 'comparable', 'warning', `There is no human page at ${origin}/factfile. Publish one (\`factfile page factfile.md\` makes it): search engines index it, so AI search tools can find the facts.`, null, '§3');
+  } else if (!s.humanPageLinksFile) {
+    add('signposts.human-page', 'comparable', 'warning', `The human page at ${origin}/factfile does not link to factfile.md. End it with: ${PAGE_FILE_LINK_HTML}`, null, '§3');
+  }
+  if (!s.footerLink) {
+    add('signposts.footer', 'comparable', 'warning', `Add a footer link for browser agents, which read every link on the page: ${FOOTER_HTML}`, null, '§3');
+  }
+  if (s.llmsTxt && !s.llmsLine) {
+    add('signposts.llms', 'comparable', 'warning', `${origin}/llms.txt does not mention factfile.md. Add: ${llmsLine(origin)}`, null, '§3');
   }
   if (s.oldHead) {
-    add('signposts.describedby', 'comparable', 'warning', 'The <link> tag uses rel="factfile". Use the registered link type instead: rel="describedby".', null, '§3');
+    add('signposts.describedby', 'comparable', 'warning', 'The <link> tag uses rel="factfile". Use the registered link type instead: rel="describedby" with title="factfile.md".', null, '§3');
   } else if (!s.head && !s.header) {
     add('signposts.describedby', 'comparable', 'warning', `No machine-readable signpost. Add ${HEAD_HTML} to the page head, or send a Link header (run \`factfile setup\` for copy-paste code).`, null, '§3');
+  } else if ((s.head && !s.headTitle) || (s.header && !s.headerTitle)) {
+    add('signposts.describedby', 'comparable', 'warning', 'The describedby signpost needs title="factfile.md", so tools can tell it apart from the describedby link that llms.txt uses.', null, '§3');
+  }
+  if (s.fileOnline && !s.wellKnown) {
+    add('signposts.well-known', 'comparable', 'warning', 'Also serve the same file at /.well-known/factfile.md.', null, '§3');
   }
   return findings;
 }

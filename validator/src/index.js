@@ -4,9 +4,10 @@ import { checkLinkedPages, checkSignposts, fetchFactfile } from './online.js';
 import { parseFactfile } from './parse.js';
 import { checkFile, finding, registrableDomain } from './rules.js';
 
-export const VERSION = '0.4.0';
+export const VERSION = '0.5.0';
 export { parseFactfile, checkFile, fetchFactfile, checkLinkedPages, checkSignposts, registrableDomain };
-export { detectPlatform, signpostStatus, writeSetupGuide } from './signposts.js';
+export { detectPlatform, signpostStatus, siteSignposts, writeSetupGuide } from './signposts.js';
+export { renderPage } from './page.js';
 export { generate, setupGuide } from './generate/index.js';
 
 /** The highest level with no errors at that level or below. */

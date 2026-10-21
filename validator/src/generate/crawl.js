@@ -1,8 +1,8 @@
 import { parse } from 'node-html-parser';
 import { registrableDomain } from '../rules.js';
-import { detectPlatform, signpostStatus } from '../signposts.js';
+import { detectPlatform, siteSignposts } from '../signposts.js';
 
-export const GENERATOR_USER_AGENT = 'factfile-generator/0.4 (+https://factfile.dev)';
+export const GENERATOR_USER_AGENT = 'factfile-generator/0.5 (+https://factfile.dev)';
 const TIMEOUT_MS = 12000;
 const MAX_PAGES = 10;
 
@@ -183,18 +183,11 @@ export async function crawlSite(target, { fetch: fetchImpl = globalThis.fetch, l
   const homeHtml = await home.text();
   const pages = [readPage(homeUrl, homeHtml)];
   const platform = detectPlatform(homeHtml, home.headers);
-  const signposts = signpostStatus(homeHtml, home.headers);
+  const signposts = await siteSignposts(new URL(homeUrl).origin, { fetch: fetchImpl, homeHtml, homeHeaders: home.headers, userAgent: GENERATOR_USER_AGENT });
   log(`read ${homeUrl}`);
 
-  // Does the site already publish a factfile.md?
-  try {
-    const existing = await get(fetchImpl, `${new URL(homeUrl).origin}/factfile.md`);
-    if (existing.ok && /factfile_version/.test(await existing.text())) {
-      signposts.fileOnline = true;
-      notes.push(`${new URL(homeUrl).origin}/factfile.md already exists. This draft is a fresh start; compare before replacing it.`);
-    }
-  } catch {
-    /* fine */
+  if (signposts.fileOnline) {
+    notes.push(`${new URL(homeUrl).origin}/factfile.md already exists. This draft is a fresh start; compare before replacing it.`);
   }
 
   // Same-site pages linked from the home page.

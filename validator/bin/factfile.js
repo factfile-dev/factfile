@@ -1,11 +1,12 @@
 #!/usr/bin/env node
-import { access, writeFile } from 'node:fs/promises';
+import { access, readFile, writeFile } from 'node:fs/promises';
 import { dirname, join } from 'node:path';
 import { LEVELS } from '../src/constants.js';
 import { formatReport } from '../src/format.js';
 import { generate, setupGuide } from '../src/generate/index.js';
 import { validate, VERSION } from '../src/index.js';
 import { PLATFORM_NAMES } from '../src/signposts.js';
+import { renderPage } from '../src/page.js';
 
 const HELP = `factfile ${VERSION}: write and check factfile.md files
 
@@ -13,6 +14,7 @@ Usage
   factfile validate <file-or-website> [options]
   factfile generate <website> [options]
   factfile setup <website> [options]
+  factfile page <file> [options]
 
 Validate
   factfile validate factfile.md              check a local file (Basic and Comparable)
@@ -41,10 +43,19 @@ Generate
 
 Setup
   factfile setup example.com                 write only ./factfile-setup.md, showing
-                                             which signposts the site already has
+                                             which of the five signposts the site has
 
   -o, --out <file>  Where to write the guide (default: factfile-setup.md)
   --stdout          Print the guide instead of writing a file
+
+Page
+  factfile page factfile.md                  turn a finished factfile.md into the human
+                                             page: factfile-page.html (a block to paste
+                                             into your site editor) and factfile.html
+                                             (a complete page to upload as /factfile)
+
+  -o, --out <file>  Where to write the complete page (default: factfile.html)
+  --stdout          Print the block instead of writing files
 
   -h, --help        Show this help
   -v, --version     Show the version
@@ -134,7 +145,7 @@ async function runGenerate(opts) {
   say('Only you can answer some of them, like who the business is NOT for. Nothing was invented.');
   if (opts.stdout) say(`To save it as a file, run the same command without --stdout (it writes ${opts.out}).`);
   say(`When done: factfile validate ${opts.out}`);
-  if (setupWritten) say(`Then follow ${setupPath} to put it online and make it findable${r.platform ? ` (written for ${PLATFORM_NAMES[r.platform]})` : ''}.`);
+  if (setupWritten) say(`Then follow ${setupPath} to put it online and add the five signposts that lead agents to it${r.platform ? ` (written for ${PLATFORM_NAMES[r.platform]})` : ''}.`);
   else if (opts.setup && !opts.stdout) say(`${setupPath} already exists, so it was not replaced (use --force).`);
   return 0;
 }
@@ -152,10 +163,41 @@ async function runSetup(opts) {
   const say = (s) => process.stderr.write(s + '\n');
   const mark = (ok) => (ok ? '✓' : '–');
   say(`${opts.stdout ? 'Setup guide printed' : `Setup guide written to ${opts.out}`}${r.platform ? ` (for ${PLATFORM_NAMES[r.platform]})` : ''}.`);
-  say(`  ${mark(r.status.fileOnline)} factfile.md online`);
-  say(`  ${mark(r.status.visible)} visible link on the home page`);
-  say(`  ${mark(r.status.head)} link tag in the page head${r.status.oldHead ? ' (uses old rel="factfile")' : ''}`);
-  say(`  ${mark(r.status.header)} Link header`);
+  const s = r.status;
+  say(`  ${mark(s.fileOnline)} factfile.md online${s.fileOnline && !s.wellKnown ? ' (no /.well-known copy yet)' : ''}`);
+  say(`  ${mark(s.mainLink)} 1. Key facts link in the home page's main content`);
+  say(`  ${mark(s.humanPage)} 2. human page at /factfile${s.humanPage && !s.humanPageLinksFile ? ' (does not link to the file yet)' : ''}`);
+  say(`  ${mark(s.footerLink)} 3. footer link`);
+  say(`  ${s.llmsTxt ? mark(s.llmsLine) : '–'} 4. line in llms.txt${s.llmsTxt ? '' : ' (the site has no llms.txt; optional)'}`);
+  say(`  ${mark(s.head || s.header)} 5. link tag or Link header${(s.head && !s.headTitle) || (s.header && !s.headerTitle) ? ' (needs title="factfile.md")' : ''}`);
+  for (const text of s.aiAddressedLinks) say(`  ⚠ link text aimed at AI, reword it: "${text}"`);
+  if (s.hiddenLinks) say('  ⚠ a hidden link to factfile: make it visible or remove it');
+  return 0;
+}
+
+async function runPage(opts) {
+  opts.out ||= 'factfile.html';
+  const file = opts.positional[0] || 'factfile.md';
+  const r = renderPage(await readFile(file, 'utf8'));
+  const say = (s) => process.stderr.write(s + '\n');
+  if (opts.stdout) {
+    process.stdout.write(r.fragment);
+    return 0;
+  }
+  const blockPath = join(dirname(opts.out), 'factfile-page.html');
+  for (const path of [opts.out, blockPath]) {
+    if (!opts.force && (await exists(path))) throw new Error(`${path} already exists. Use --force to overwrite it.`);
+  }
+  await writeFile(opts.out, r.page, 'utf8');
+  await writeFile(blockPath, r.fragment, 'utf8');
+  say(`Human page written:`);
+  say(`  ${opts.out}: a complete page. Upload it so it opens at /factfile (for example as factfile/index.html).`);
+  say(`  ${blockPath}: the same facts as a block to paste into your site editor (WordPress Custom HTML, Shopify page HTML).`);
+  if (r.problems.length) {
+    say('');
+    say(`Note: factfile.md does not pass Basic yet (${r.problems.length} problem(s)). Run: factfile validate ${file}`);
+  }
+  say('Then link to it from your home page: see factfile-setup.md, or run factfile setup <your site>.');
   return 0;
 }
 
@@ -170,9 +212,10 @@ async function main(argv) {
     return 0;
   }
   const opts = parseArgs(args);
-  const command = ['validate', 'generate', 'setup'].includes(opts.positional[0]) ? opts.positional.shift() : 'validate';
+  const command = ['validate', 'generate', 'setup', 'page'].includes(opts.positional[0]) ? opts.positional.shift() : 'validate';
   if (command === 'generate') return runGenerate(opts);
   if (command === 'setup') return runSetup(opts);
+  if (command === 'page') return runPage(opts);
   return runValidate(opts);
 }
 
