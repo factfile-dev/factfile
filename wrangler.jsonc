@@ -1,0 +1,11 @@
+// Cloudflare Workers config for factfile.dev: serves the static site in ./site.
+// Built from site-src/ (cd site-src && npm run build); nothing is built on Cloudflare.
+{
+  "name": "factfile",
+  "compatibility_date": "2026-10-01",
+  "assets": {
+    "directory": "./site",
+    "html_handling": "auto-trailing-slash",
+    "not_found_handling": "404-page"
+  }
+}
