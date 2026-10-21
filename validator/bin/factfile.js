@@ -1,15 +1,18 @@
 #!/usr/bin/env node
 import { access, writeFile } from 'node:fs/promises';
+import { dirname, join } from 'node:path';
 import { LEVELS } from '../src/constants.js';
 import { formatReport } from '../src/format.js';
-import { generate } from '../src/generate/index.js';
+import { generate, setupGuide } from '../src/generate/index.js';
 import { validate, VERSION } from '../src/index.js';
+import { PLATFORM_NAMES } from '../src/signposts.js';
 
 const HELP = `factfile ${VERSION}: write and check factfile.md files
 
 Usage
   factfile validate <file-or-website> [options]
   factfile generate <website> [options]
+  factfile setup <website> [options]
 
 Validate
   factfile validate factfile.md              check a local file (Basic and Comparable)
@@ -22,23 +25,33 @@ Validate
   --json            Print the result as JSON
 
 Generate
-  factfile generate example.com              write a draft to ./factfile.md
+  factfile generate example.com              write a draft to ./factfile.md, and
+                                             ./factfile-setup.md with copy-paste code
+                                             to put it online and make it findable
   factfile generate example.com --ai ollama  let a local AI word the sentences
 
   -o, --out <file>  Where to write the draft (default: factfile.md)
-  --stdout          Print the draft instead of writing a file
-  --force           Overwrite an existing file
+  --stdout          Print the draft instead of writing files
+  --force           Overwrite existing files
+  --no-setup        Do not write factfile-setup.md
   --ai <provider>   ollama (local), openai, or compatible (any OpenAI-style API)
   --model <name>    AI model to use (default for ollama: llama3.1)
   --ai-url <url>    AI service address (or set FACTFILE_AI_URL)
                     API keys are read from FACTFILE_AI_KEY or OPENAI_API_KEY.
+
+Setup
+  factfile setup example.com                 write only ./factfile-setup.md, showing
+                                             which signposts the site already has
+
+  -o, --out <file>  Where to write the guide (default: factfile-setup.md)
+  --stdout          Print the guide instead of writing a file
 
   -h, --help        Show this help
   -v, --version     Show the version
 `;
 
 function parseArgs(args) {
-  const opts = { positional: [], online: false, json: false, require: 'basic', out: 'factfile.md', stdout: false, force: false, ai: null, model: null, aiUrl: null };
+  const opts = { positional: [], online: false, json: false, require: 'basic', out: null, stdout: false, force: false, setup: true, ai: null, model: null, aiUrl: null };
   const takes = { '--require': 'require', '-o': 'out', '--out': 'out', '--ai': 'ai', '--model': 'model', '--ai-url': 'aiUrl' };
   for (let i = 0; i < args.length; i++) {
     const a = args[i];
@@ -51,6 +64,7 @@ function parseArgs(args) {
     else if (a === '--json') opts.json = true;
     else if (a === '--stdout') opts.stdout = true;
     else if (a === '--force') opts.force = true;
+    else if (a === '--no-setup') opts.setup = false;
     else if (a.startsWith('-')) throw new Error(`Unknown option ${a}. Run factfile --help.`);
     else opts.positional.push(a);
   }
@@ -67,12 +81,15 @@ async function runValidate(opts) {
   return reachedIdx >= LEVELS.indexOf(opts.require) ? 0 : 1;
 }
 
+const exists = (path) => access(path).then(() => true, () => false);
+
 async function runGenerate(opts) {
+  opts.out ||= 'factfile.md';
+  const setupPath = join(dirname(opts.out), 'factfile-setup.md');
   const target = opts.positional[0];
   if (!target) throw new Error('Give a website to read, e.g. factfile generate example.com');
   if (!opts.stdout && !opts.force) {
-    const exists = await access(opts.out).then(() => true, () => false);
-    if (exists) throw new Error(`${opts.out} already exists. Use --force to overwrite it, or -o to choose another file.`);
+    if (await exists(opts.out)) throw new Error(`${opts.out} already exists. Use --force to overwrite it, or -o to choose another file.`);
   }
   const say = (s) => process.stderr.write(s + '\n');
   say(`Reading ${target} …`);
@@ -82,8 +99,15 @@ async function runGenerate(opts) {
     log: (m) => say(`  ${m}`),
   });
 
+  let setupWritten = false;
   if (opts.stdout) process.stdout.write(r.text);
-  else await writeFile(opts.out, r.text, 'utf8');
+  else {
+    await writeFile(opts.out, r.text, 'utf8');
+    if (opts.setup && (opts.force || !(await exists(setupPath)))) {
+      await writeFile(setupPath, r.setup, 'utf8');
+      setupWritten = true;
+    }
+  }
 
   const f = r.facts;
   const found = [
@@ -110,6 +134,28 @@ async function runGenerate(opts) {
   say('Only you can answer some of them, like who the business is NOT for. Nothing was invented.');
   if (opts.stdout) say(`To save it as a file, run the same command without --stdout (it writes ${opts.out}).`);
   say(`When done: factfile validate ${opts.out}`);
+  if (setupWritten) say(`Then follow ${setupPath} to put it online and make it findable${r.platform ? ` (written for ${PLATFORM_NAMES[r.platform]})` : ''}.`);
+  else if (opts.setup && !opts.stdout) say(`${setupPath} already exists, so it was not replaced (use --force).`);
+  return 0;
+}
+
+async function runSetup(opts) {
+  opts.out ||= 'factfile-setup.md';
+  const target = opts.positional[0];
+  if (!target) throw new Error('Give your website, e.g. factfile setup example.com');
+  if (!opts.stdout && !opts.force && (await exists(opts.out))) {
+    throw new Error(`${opts.out} already exists. Use --force to overwrite it, or -o to choose another file.`);
+  }
+  const r = await setupGuide(target);
+  if (opts.stdout) process.stdout.write(r.text);
+  else await writeFile(opts.out, r.text, 'utf8');
+  const say = (s) => process.stderr.write(s + '\n');
+  const mark = (ok) => (ok ? '✓' : '–');
+  say(`${opts.stdout ? 'Setup guide printed' : `Setup guide written to ${opts.out}`}${r.platform ? ` (for ${PLATFORM_NAMES[r.platform]})` : ''}.`);
+  say(`  ${mark(r.status.fileOnline)} factfile.md online`);
+  say(`  ${mark(r.status.visible)} visible link on the home page`);
+  say(`  ${mark(r.status.head)} link tag in the page head${r.status.oldHead ? ' (uses old rel="factfile")' : ''}`);
+  say(`  ${mark(r.status.header)} Link header`);
   return 0;
 }
 
@@ -124,8 +170,10 @@ async function main(argv) {
     return 0;
   }
   const opts = parseArgs(args);
-  const command = ['validate', 'generate'].includes(opts.positional[0]) ? opts.positional.shift() : 'validate';
-  return command === 'generate' ? runGenerate(opts) : runValidate(opts);
+  const command = ['validate', 'generate', 'setup'].includes(opts.positional[0]) ? opts.positional.shift() : 'validate';
+  if (command === 'generate') return runGenerate(opts);
+  if (command === 'setup') return runSetup(opts);
+  return runValidate(opts);
 }
 
 main(process.argv).then(

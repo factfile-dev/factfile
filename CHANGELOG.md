@@ -2,6 +2,8 @@
 
 ## Unreleased
 
+- Spec: discovery signposts. A visible link on the home page (SHOULD), and the registered `describedby` link relation for the `<head>` link and a new HTTP `Link` header (replacing the invented `rel="factfile"`). The agent reading protocol starts with "Look for it".
+- factfile 0.4.0: `generate` also writes `factfile-setup.md`, platform-aware copy-paste code for the signposts (WordPress, Shopify, Wix, Squarespace, Webflow, Next.js, Apache, Nginx, Netlify, Vercel, Cloudflare) with the site's current status; new `factfile setup <site>` command; the validator warns when a live site has no visible or `describedby` signpost; figures followed by a comma ("Unit 4,") or written as "2.5x" are read correctly
 - factfile 0.3.0, from the first real-world test: the brand name instead of the whole page title; the Verdict keeps the site's full sentence and a shortened summary is cut at a natural break and flagged; services, about and other main pages are read (up to 10); spam-protected emails are decoded; phone numbers kept as the page shows them; a "Book appointment" button that leads to a contact page is not treated as online booking; regulators (Ofsted, CQC, Charity Commission, FCA, SRA, GDC, Companies House) are recognised, and a regulator mentioned but not linked becomes a TODO; sites with no structured data default to the `service` profile with their address, phone and hours filled in
 - factfile 0.2.0: new `generate` command drafts a factfile.md from a website (visible text and schema.org data, robots.txt respected, TODOs for what only the owner knows), with optional AI wording from Ollama or any OpenAI-compatible API, checked against the site before use
 - Validator: unfinished drafts (`TODO`) fail Basic; Windows line endings supported

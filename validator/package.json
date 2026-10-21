@@ -1,6 +1,6 @@
 {
   "name": "factfile",
-  "version": "0.3.0",
+  "version": "0.4.0",
   "description": "Generate and validate factfile.md, the open standard that describes a business to AI agents.",
   "type": "module",
   "bin": {

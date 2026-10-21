@@ -60,7 +60,7 @@ const addMonths = (dateStr, months) => {
   return d;
 };
 
-const FIGURE_RE = /(?:[£$€¥]\s?\d[\d,]*(?:\.\d+)?|\b\d[\d,]*(?:\.\d+)?(?:\s?%)?)(?![\w])/g;
+const FIGURE_RE = /(?:[£$€¥]\s?\d{1,3}(?:,\d{3})+(?:\.\d+)?|[£$€¥]\s?\d+(?:\.\d+)?|\b\d{1,3}(?:,\d{3})+(?:\.\d+)?(?:\s?%)?|\b\d+(?:\.\d+)?(?:\s?%|x(?![a-z]))?)(?![\w])/g;
 
 /** Prices, numbers and percentages in visible text (list numbering and URLs removed). */
 export function extractFigures(line) {

@@ -1,12 +1,13 @@
 import { readFile } from 'node:fs/promises';
 import { LEVELS, LEVEL_NAMES } from './constants.js';
-import { checkLinkedPages, fetchFactfile } from './online.js';
+import { checkLinkedPages, checkSignposts, fetchFactfile } from './online.js';
 import { parseFactfile } from './parse.js';
 import { checkFile, finding, registrableDomain } from './rules.js';
 
-export const VERSION = '0.3.0';
-export { parseFactfile, checkFile, fetchFactfile, checkLinkedPages, registrableDomain };
-export { generate } from './generate/index.js';
+export const VERSION = '0.4.0';
+export { parseFactfile, checkFile, fetchFactfile, checkLinkedPages, checkSignposts, registrableDomain };
+export { detectPlatform, signpostStatus, writeSetupGuide } from './signposts.js';
+export { generate, setupGuide } from './generate/index.js';
 
 /** The highest level with no errors at that level or below. */
 export function levelReached(findings, { onlineChecked }) {
@@ -60,7 +61,11 @@ export async function validate({ text, target, online = false, fetch = globalThi
     }
   }
 
-  if (online) findings.push(...(await checkLinkedPages(doc, { fetch })));
+  if (online) {
+    findings.push(...(await checkLinkedPages(doc, { fetch })));
+    const home = fetchedFrom ? new URL(fetchedFrom).origin + '/' : doc.header?.url;
+    if (home) findings.push(...(await checkSignposts(String(home), { fetch })));
+  }
 
   return report({ source, findings, onlineChecked: online, doc });
 }

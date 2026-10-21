@@ -1,6 +1,7 @@
 import { BROWSER_USER_AGENT, USER_AGENT } from './constants.js';
 import { extractUrls, getField } from './parse.js';
 import { extractFigures, finding, registrableDomain } from './rules.js';
+import { FOOTER_HTML, HEAD_HTML, signpostStatus } from './signposts.js';
 
 const TIMEOUT_MS = 10000;
 const MAX_LINKS = 40;
@@ -109,6 +110,37 @@ export async function fetchFactfile(target, { fetch: fetchImpl = globalThis.fetc
   }
 
   return { text, finalUrl: url, findings };
+}
+
+/**
+ * Discovery (Section 3): agents do not look for factfile.md by themselves, so the home page
+ * should point to it: a visible link (the one agents reading page text will see), and a
+ * describedby link tag or Link header (for tools that read page code or headers).
+ */
+export async function checkSignposts(homeUrl, { fetch: fetchImpl = globalThis.fetch } = {}) {
+  const findings = [];
+  const add = (...a) => findings.push(finding(...a));
+  let res;
+  try {
+    res = await fetchImpl(homeUrl, {
+      redirect: 'follow',
+      headers: { 'user-agent': BROWSER_USER_AGENT, accept: 'text/html,application/xhtml+xml' },
+      signal: AbortSignal.timeout(TIMEOUT_MS),
+    });
+  } catch {
+    return findings;
+  }
+  if (!res.ok) return findings;
+  const s = signpostStatus(await res.text(), res.headers);
+  if (!s.visible) {
+    add('signposts.visible', 'comparable', 'warning', `The home page has no visible link to factfile.md. Agents read page text and follow links, so this is the signpost they are most likely to find. Add one to your footer: ${FOOTER_HTML}`, null, '§3');
+  }
+  if (s.oldHead) {
+    add('signposts.describedby', 'comparable', 'warning', 'The <link> tag uses rel="factfile". Use the registered link type instead: rel="describedby".', null, '§3');
+  } else if (!s.head && !s.header) {
+    add('signposts.describedby', 'comparable', 'warning', `No machine-readable signpost. Add ${HEAD_HTML} to the page head, or send a Link header (run \`factfile setup\` for copy-paste code).`, null, '§3');
+  }
+  return findings;
 }
 
 /** Visible text of an HTML page, roughly as a person would read it. */
