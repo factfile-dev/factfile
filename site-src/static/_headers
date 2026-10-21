@@ -1,20 +1,36 @@
-/
-  Link: </factfile.md>; rel="describedby"; type="text/markdown"; title="factfile.md"
+# Headers for static files. Rules add up, so each header is set by one rule only. Pages (/, /about, …) are served through worker/index.js,
+# which adds their Link, Vary and security headers itself.
 
-/factfile.md
+/*
+  X-Content-Type-Options: nosniff
+  Referrer-Policy: strict-origin-when-cross-origin
+  Permissions-Policy: camera=(), microphone=(), geolocation=(), interest-cohort=()
+
+/*.md
   Content-Type: text/markdown; charset=utf-8
   Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=300
 
-/.well-known/factfile.md
-  Content-Type: text/markdown; charset=utf-8
+/.well-known/agent-skills/index.json
   Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
 
-/spec.md
-  Content-Type: text/markdown; charset=utf-8
-  Access-Control-Allow-Origin: *
+/.well-known/security.txt
+  Content-Type: text/plain; charset=utf-8
 
 /llms.txt
   Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/llms-full.txt
+  Content-Type: text/plain; charset=utf-8
+  Access-Control-Allow-Origin: *
+
+/changelog.xml
+  Content-Type: application/rss+xml; charset=utf-8
+
+/pages.json
+  Access-Control-Allow-Origin: *
 
 /fonts/*
   Cache-Control: public, max-age=31536000, immutable

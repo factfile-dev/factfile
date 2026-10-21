@@ -2,6 +2,7 @@
 
 ## Unreleased
 
+- factfile.dev: new design and the in-browser generator at /generate (same code as `npx factfile`, with WebMCP tools for in-browser agents); every page also served as Markdown (`.md` address or `Accept: text/markdown`); JSON-LD, llms-full.txt, an agent skill at /.well-known/agent-skills/, AI crawler rules and Content-Signal in robots.txt, security.txt and a changelog feed. The site's own factfile.md reaches Checked with all five signposts.
 - Spec: five discovery signposts in order of importance: a "Key facts" link in the home page's main content, the human page (Verdict first, linking to the file), a footer link, an `llms.txt` line, and machine signposts (`describedby` tag and header, `/.well-known/` copy). Signpost links MUST be visible and MUST NOT address AI; `describedby` MUST carry `title="factfile.md"`. Based on how agent fetch tools read pages: most keep only main content and drop footers and `<head>`.
 - factfile 0.5.0: new `factfile page` command makes the human page (`factfile.html` block and `factfile-page.html` full page); the setup guide covers all five signposts with status for each; the validator fails hidden signpost links and link text aimed at AI, and warns for each missing signpost; link wording is now "Key facts" instead of "Facts for AI"
 - Spec: discovery signposts. A visible link on the home page (SHOULD), and the registered `describedby` link relation for the `<head>` link and a new HTTP `Link` header (replacing the invented `rel="factfile"`). The agent reading protocol starts with "Look for it".

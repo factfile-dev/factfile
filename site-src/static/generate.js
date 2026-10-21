@@ -227,8 +227,11 @@
     save('factfile.zip', zip(f), 'application/zip'); thank();
   });
   $('#gen-copy-llms').addEventListener('click', async (e) => {
-    if (!state.origin) return;
-    try { await navigator.clipboard.writeText(F.llmsLine(state.origin)); e.currentTarget.textContent = 'Copied'; setTimeout(() => (e.target.textContent = 'Copy llms.txt line'), 1600); } catch {}
+    const btn = e.currentTarget; // currentTarget is null once the await below resumes
+    if (!state.origin) { btn.textContent = 'Add a url: line first'; setTimeout(() => (btn.textContent = 'Copy llms.txt line'), 1800); return; }
+    try { await navigator.clipboard.writeText(F.llmsLine(state.origin)); btn.textContent = 'Copied'; }
+    catch { btn.textContent = 'Copy failed: see the Setup guide tab'; }
+    setTimeout(() => (btn.textContent = 'Copy llms.txt line'), 1800);
   });
   $('#gen-reset').addEventListener('click', () => { if (confirm('Clear this draft and start again?')) { store.del('factfile-draft'); ta.value = ''; work.hidden = true; log.hidden = true; $('#gen-resume').hidden = true; start.scrollIntoView(); } });
 
@@ -255,4 +258,37 @@
     return new Blob([...parts, ...central, new Uint8Array(e.buffer)], { type: 'application/zip' });
   }
   window.__factfileZip = zip;
+
+  // ---------- WebMCP: the same tools for AI agents working in this browser ----------
+  // Registered only where the browser supports it (document.modelContext / navigator.modelContext).
+  const mc = document.modelContext || navigator.modelContext;
+  if (mc && typeof mc.registerTool === 'function') {
+    const text = (value) => ({ content: [{ type: 'text', text: typeof value === 'string' ? value : JSON.stringify(value, null, 2) }] });
+    const tools = [
+      {
+        name: 'factfile_validate',
+        description: 'Check the text of a factfile.md against the specification. Returns the level reached (basic, comparable or checked; null if not yet Basic) and every problem with its line number. Offline checks only.',
+        inputSchema: { type: 'object', properties: { text: { type: 'string', description: 'The full factfile.md text' } }, required: ['text'] },
+        execute: async ({ text: t }) => { const r = F.check(String(t || '')); return text({ level: r.level, problems: r.findings.map((f) => ({ line: f.line ?? null, severity: f.severity, level: f.level, rule: f.rule, message: f.message })) }); },
+      },
+      {
+        name: 'factfile_draft_from_website',
+        description: 'Draft a factfile.md from a public website, using only what its pages visibly say (robots.txt respected). Lines only the owner can answer are marked TODO. Returns the draft text and the list of TODO lines.',
+        inputSchema: { type: 'object', properties: { website: { type: 'string', description: 'The website address, for example example.com' } }, required: ['website'] },
+        execute: async ({ website }) => {
+          const origin = normalise(String(website || ''));
+          if (!origin) return text('Give a website address, for example example.com.');
+          const r = await F.generate(origin, { fetch: relayFetch, version: '0.5.0 (web, WebMCP)' });
+          return text({ text: r.text, todos: r.todos.map((x) => x.message || x), pagesRead: r.pages });
+        },
+      },
+      {
+        name: 'factfile_key_facts_page',
+        description: 'Turn a finished factfile.md (no TODO lines) into the HTML of its Key facts page for /factfile.',
+        inputSchema: { type: 'object', properties: { text: { type: 'string', description: 'The full factfile.md text' } }, required: ['text'] },
+        execute: async ({ text: t }) => { try { return text(F.renderPage(String(t || '')).page); } catch (err) { return text(err.message); } },
+      },
+    ];
+    for (const tool of tools) { try { mc.registerTool(tool); } catch {} }
+  }
 })();

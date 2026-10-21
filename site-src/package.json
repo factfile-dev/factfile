@@ -3,6 +3,13 @@
   "private": true,
   "type": "module",
   "description": "Builds the factfile.dev website into ../site",
-  "scripts": { "build": "node build.mjs" },
-  "devDependencies": { "marked": "15.0.12" }
+  "scripts": {
+    "build": "node build.mjs",
+    "test": "node test/generator.e2e.mjs"
+  },
+  "devDependencies": {
+    "marked": "15.0.12",
+    "turndown": "^7.2.0",
+    "turndown-plugin-gfm": "^1.0.2"
+  }
 }

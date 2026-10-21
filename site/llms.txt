@@ -1,17 +1,27 @@
 # factfile.md
 
-> factfile.md is an open standard for one Markdown file at a website's root that gives AI agents a business's key facts (what it offers, who it is for and not for, prices and how to start), each linked to the page that shows it.
+> factfile.md is an open standard for one Markdown file at the root of a website that gives AI agents a business's key facts (what it offers, who it is for and not for, what it costs and how to start), each linked to the page that shows it.
 
-The specification is a draft for public comment (v0.1). Free command-line tools draft a file from a website, check it, and make the human-readable page.
+The specification is version 0.1, a draft for public comment, created by Alan Kiayi and published under CC BY 4.0. Free MIT-licensed tools draft a file from a website, check it, make the human-readable Key facts page and write a setup guide; they run in the browser at https://factfile.dev/generate or with `npx factfile`. Every page on this site is also available as Markdown (add `.md` to the address, or send `Accept: text/markdown`).
 
-## Key pages
+## Key facts
 
 - [factfile.md](https://factfile.dev/factfile.md): key facts about this project: what it offers, who it is for, prices and how to start
-- [Specification](https://factfile.dev/spec.md): the full factfile.md specification in Markdown
-- [What is factfile.md?](https://factfile.dev/what-is-factfile): a short explanation and how it relates to llms.txt and schema.org
-- [Tools](https://factfile.dev/tools): generate, setup, page and validate commands
+
+## Pages
+
+- [factfile.md: checkable business facts for AI agents](https://factfile.dev/index.md): factfile.md is an open standard for one Markdown file at a website's root that gives AI agents a business's key facts, each linked to the page that shows it.
+- [What is factfile.md? The business facts file for AI agents](https://factfile.dev/what-is-factfile.md): factfile.md is a Markdown file at a website's root that gives AI agents a business's key facts, each linked to its source. How it compares with llms.txt.
+- [Generate a factfile.md from your website, free](https://factfile.dev/generate.md): Draft a factfile.md from your website in your browser, fill in what only you can answer, check it with the official validator and download every file you need.
+- [factfile.md specification v0.1 (draft)](https://factfile.dev/spec.md): The factfile.md specification: file format, sections, profiles, integrity rules, conformance levels and the agent reading protocol.
+- [factfile tools: generate, check and publish factfile.md](https://factfile.dev/tools.md): Free, open-source command-line tools to draft a factfile.md from your website, check it, make the human page and set up the signposts.
+- [About factfile.md and its author](https://factfile.dev/about.md): factfile.md was created by Alan Kiayi, a product builder in the UK, to give AI agents facts they can check.
+- [Support factfile.md: buy me a coffee](https://factfile.dev/support.md): factfile.md and its tools are free and open source. If they help you, you can support the work with a coffee.
 
 ## Optional
 
+- [Full text for language models](https://factfile.dev/llms-full.txt): the specification, the explainer, the questions and this site's factfile.md in one file
 - [Source code](https://github.com/factfile-dev/factfile): specification, examples and tools on GitHub
 - [Examples](https://github.com/factfile-dev/factfile/tree/main/examples): complete files for a software product, a local business and an online shop
+- [npm package](https://www.npmjs.com/package/factfile): the command-line tools
+- [Agent skill](https://factfile.dev/.well-known/agent-skills/factfile/SKILL.md): how an agent reads, writes and checks factfile.md files

@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "factfile",
+      "type": "skill-md",
+      "description": "Use when an agent needs a business's key facts (what it offers, who it is for and not for, prices, how to start), or is asked to write, check or publish a factfile.md file.",
+      "url": "https://factfile.dev/.well-known/agent-skills/factfile/SKILL.md",
+      "digest": "sha256:5a8024fbd5d23be9132b8788607ef6407483237ab54ff26d7ceb937c95d7a7be"
+    }
+  ]
+}
