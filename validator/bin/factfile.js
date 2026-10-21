@@ -108,7 +108,8 @@ async function runGenerate(opts) {
   say('');
   say(`${r.todos.length} thing(s) for you to fill in or check — search the file for TODO.`);
   say('Only you can answer some of them, like who the business is NOT for. Nothing was invented.');
-  say(`When done: factfile validate ${opts.stdout ? 'factfile.md' : opts.out}`);
+  if (opts.stdout) say(`To save it as a file, run the same command without --stdout (it writes ${opts.out}).`);
+  say(`When done: factfile validate ${opts.out}`);
   return 0;
 }
 
