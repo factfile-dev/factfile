@@ -1,16 +1,17 @@
 import { parse } from 'node-html-parser';
 import { registrableDomain } from '../rules.js';
 
-export const GENERATOR_USER_AGENT = 'factfile-generator/0.2 (+https://factfile.dev)';
+export const GENERATOR_USER_AGENT = 'factfile-generator/0.3 (+https://factfile.dev)';
 const TIMEOUT_MS = 12000;
-const MAX_PAGES = 8;
+const MAX_PAGES = 10;
 
-// Pages worth reading, by what their address or link text says.
+// Pages worth reading, by what their address or link text says. Order is priority.
 export const PAGE_KINDS = {
   pricing: /\b(pric(e|es|ing)|plans?|rates?|fees?|costs?|tariffs?|menu|packages?)\b/i,
   booking: /\b(book(ing)?|appointments?|reserv(e|ation)s?|schedule)\b/i,
-  contact: /\b(contact|find[- ]us|location|visit[- ]us|get[- ]in[- ]touch)\b/i,
-  about: /\b(about|who[- ]we[- ]are|our[- ]story|company)\b/i,
+  contact: /\b(contact|find[- ]us|location|visit[- ]us|get[- ]in[- ]touch|enquir(y|e|ies)|referrals?)\b/i,
+  services: /\b(services?|what[- ]we[- ]do|our[- ]model|our[- ]approach|approach|how[- ]it[- ]works|solutions|treatments?|products?)\b/i,
+  about: /\b(about|who[- ]we[- ]are|our[- ]story|our[- ]team|team|company|mission)\b/i,
   delivery: /\b(deliver(y|ies)|shipping|postage)\b/i,
   returns: /\b(returns?|refunds?)\b/i,
   download: /\b(download|get[- ]the[- ]app|install)\b/i,
@@ -66,6 +67,25 @@ function flattenJsonLd(node, out = []) {
   return out;
 }
 
+/** Decode the HTML entities that turn up in titles and meta tags. */
+export function decodeEntities(s) {
+  if (typeof s !== 'string') return s;
+  const named = { amp: '&', apos: "'", quot: '"', lt: '<', gt: '>', nbsp: ' ', pound: '£', euro: '€', ndash: '–', mdash: '—', rsquo: '’', lsquo: '‘', hellip: '…' };
+  return s
+    .replace(/&#x([0-9a-f]+);/gi, (_, h) => String.fromCodePoint(parseInt(h, 16)))
+    .replace(/&#(\d+);/g, (_, d) => String.fromCodePoint(Number(d)))
+    .replace(/&([a-z]+);/gi, (m, n) => named[n.toLowerCase()] ?? m);
+}
+
+/** Cloudflare hides email addresses from spam bots; the address is still shown to every visitor. */
+export function decodeCfEmail(hex) {
+  if (!/^[0-9a-f]{4,}$/i.test(hex) || hex.length % 2) return null;
+  const key = parseInt(hex.slice(0, 2), 16);
+  let out = '';
+  for (let i = 2; i < hex.length; i += 2) out += String.fromCharCode(parseInt(hex.slice(i, i + 2), 16) ^ key);
+  return /^[^@\s]+@[^@\s]+\.[^@\s]+$/.test(out) ? out : null;
+}
+
 /** Read one HTML page into the parts the extractor needs. */
 export function readPage(url, html) {
   const root = parse(html, { comment: false, blockTextElements: { script: true, style: true, noscript: false } });
@@ -77,17 +97,30 @@ export function readPage(url, html) {
       /* broken JSON-LD is common; skip it */
     }
   }
-  const meta = (sel) => root.querySelector(sel)?.getAttribute('content')?.trim() || null;
+  const meta = (sel) => decodeEntities(root.querySelector(sel)?.getAttribute('content')?.trim()) || null;
   const links = root
     .querySelectorAll('a[href]')
     .map((a) => {
       try {
-        return { href: new URL(a.getAttribute('href'), url).toString().replace(/#.*$/, ''), text: clean(a.text) };
+        const raw = a.getAttribute('href');
+        const cf = raw.match(/\/cdn-cgi\/l\/email-protection#([0-9a-f]+)/i);
+        if (cf) {
+          const email = decodeCfEmail(cf[1]);
+          return email ? { href: `mailto:${email}`, text: email } : null;
+        }
+        return { href: new URL(raw, url).toString().replace(/#.*$/, ''), text: clean(decodeEntities(a.text)) };
       } catch {
         return null;
       }
     })
     .filter(Boolean);
+  for (const el of root.querySelectorAll('[data-cfemail]')) {
+    const email = decodeCfEmail(el.getAttribute('data-cfemail'));
+    if (email) {
+      links.push({ href: `mailto:${email}`, text: email });
+      el.set_content(email);
+    }
+  }
 
   for (const el of root.querySelectorAll('script, style, noscript, template, svg, [hidden], [aria-hidden="true"]')) el.remove();
   const nav = root.querySelectorAll('nav');
@@ -101,7 +134,7 @@ export function readPage(url, html) {
   return {
     url,
     lang: root.querySelector('html')?.getAttribute('lang') || null,
-    title: clean(root.querySelector('title')?.text || ''),
+    title: clean(decodeEntities(root.querySelector('title')?.text || '')),
     description: meta('meta[name="description"]') || meta('meta[property="og:description"]'),
     siteName: meta('meta[property="og:site_name"]'),
     jsonld,
@@ -159,8 +192,9 @@ export async function crawlSite(target, { fetch: fetchImpl = globalThis.fetch, l
     /* fine */
   }
 
-  // Choose the best candidate page for each kind (shortest matching path on the same site).
-  const chosen = new Map();
+  // Same-site pages linked from the home page.
+  const candidates = [];
+  const seenUrls = new Set([homeUrl.replace(/\/$/, '')]);
   for (const link of pages[0].links) {
     let u;
     try {
@@ -169,18 +203,31 @@ export async function crawlSite(target, { fetch: fetchImpl = globalThis.fetch, l
       continue;
     }
     if (!/^https?:$/.test(u.protocol) || registrableDomain(u.toString()) !== siteDomain) continue;
-    if (/\.(pdf|jpe?g|png|gif|webp|zip|mp4)$/i.test(u.pathname)) continue;
-    if (u.toString().replace(/\/$/, '') === homeUrl.replace(/\/$/, '')) continue;
-    for (const [kind, re] of Object.entries(PAGE_KINDS)) {
-      if (re.test(u.pathname.replace(/[-_/]/g, ' ')) || re.test(link.text)) {
-        const prev = chosen.get(kind);
-        if (!prev || u.pathname.length < new URL(prev).pathname.length) chosen.set(kind, u.toString());
-      }
+    if (/\.(pdf|jpe?g|png|gif|webp|zip|mp4|xml)$/i.test(u.pathname) || /\/(wp-|cdn-cgi|feed|tag|category|author)\b/i.test(u.pathname)) continue;
+    u.search = '';
+    const key = u.toString().replace(/\/$/, '');
+    if (seenUrls.has(key)) continue;
+    seenUrls.add(key);
+    candidates.push({ url: u.toString(), path: u.pathname, text: link.text });
+  }
+
+  // First, the best page for each kind of fact, in priority order (shortest matching path wins).
+  // A page can serve several kinds (a contact page reached from a "Book appointment" button).
+  const kindOf = new Map(); // url -> [kinds]
+  for (const [kind, re] of Object.entries(PAGE_KINDS)) {
+    const byPath = candidates.filter((c) => re.test(c.path.replace(/[-_/]/g, ' ')));
+    const byText = candidates.filter((c) => re.test(c.text));
+    const pick = [...byPath].sort((a, b) => a.path.length - b.path.length)[0] || [...byText].sort((a, b) => a.path.length - b.path.length)[0];
+    if (pick) kindOf.set(pick.url, [...(kindOf.get(pick.url) || []), kind]);
+  }
+  // Then, with any budget left, the site's other top-level pages: they describe what it offers.
+  for (const c of candidates) {
+    if (kindOf.size >= MAX_PAGES - 1) break;
+    if (!kindOf.has(c.url) && c.path.replace(/^\/|\/$/g, '').split('/').length === 1 && !/career|jobs|vacanc|login|account|cart|basket|checkout|terms|cookie/i.test(c.path)) {
+      kindOf.set(c.url, ['page']);
     }
   }
 
-  const kindOf = new Map();
-  for (const [kind, url] of chosen) if (!kindOf.has(url)) kindOf.set(url, kind);
   const queue = [...kindOf.keys()].slice(0, MAX_PAGES - 1);
   for (const url of queue) {
     if (!allowed(new URL(url).pathname)) {
@@ -189,9 +236,14 @@ export async function crawlSite(target, { fetch: fetchImpl = globalThis.fetch, l
     }
     try {
       const r = await get(fetchImpl, url);
-      if (!r.ok || !/html/i.test(r.headers.get('content-type') || 'text/html')) continue;
+      if (!r.ok) {
+        notes.push(`Could not read ${url} (HTTP ${r.status}).`);
+        continue;
+      }
+      if (!/html/i.test(r.headers.get('content-type') || 'text/html')) continue;
       const page = readPage(r.url || url, await r.text());
-      page.kind = kindOf.get(url);
+      page.kinds = kindOf.get(url);
+      page.kind = page.kinds[0];
       pages.push(page);
       log(`read ${url}`);
     } catch {
@@ -199,5 +251,6 @@ export async function crawlSite(target, { fetch: fetchImpl = globalThis.fetch, l
     }
   }
   pages[0].kind = 'home';
+  pages[0].kinds = ['home'];
   return { origin: new URL(homeUrl).origin, homeUrl, pages, notes };
 }

@@ -4,6 +4,15 @@ const q = (v) => (typeof v === 'string' && /^[\w .,'&()/+@-]*$/.test(v) && !/^(t
 const todo = (what) => `TODO: ${what}`;
 const link = (label, url) => (url ? ` ([${label}](${url}))` : '');
 
+/** Address, phone and hours found on the site, each linked to the page that shows it. */
+function contactLines(f) {
+  return [
+    f.address && `- Address: ${f.address}${link('contact', f.addressSource)}`,
+    f.phone && `- Phone: ${f.phone}${link('contact', f.phoneSource)}`,
+    f.hours && `- Opening hours: ${f.hours}${link('hours', f.hoursSource)}`,
+  ].filter(Boolean);
+}
+
 function addMonths(date, n) {
   const d = new Date(date);
   const day = d.getUTCDate();
@@ -28,9 +37,15 @@ export function writeDraft(facts, { today = new Date(), version, ai = null } = {
   H.push(`factfile_version: ${SPEC_VERSION}`);
   H.push(`name: ${q(f.name)}`);
   H.push(`url: ${f.url}`);
-  H.push(type ? `type: [${type.join(', ')}]   # TODO: check this profile (guessed from the site)` : `type: [TODO]   # one or more of: ${Object.keys(PROFILES).join(', ')}`);
+  H.push(
+    type
+      ? `type: [${type.join(', ')}]   # TODO: check this profile (${f.typeFallback ? 'a guess' : 'guessed from the site'}); choose from ${Object.keys(PROFILES).join(', ')}`
+      : `type: [TODO]   # one or more of: ${Object.keys(PROFILES).join(', ')}`,
+  );
   H.push(`category: ${f.category ? q(f.category) + '   # TODO: check, in plain words' : '"TODO: plain-words category, e.g. dog grooming salon"'}`);
-  H.push(`summary: ${f.summary ? q(f.summary) : '"TODO: one factual sentence, under 160 characters"'}`);
+  H.push(
+    `summary: ${f.summary ? q(f.summary) + (f.summaryCut ? '   # TODO: shortened from your site to fit 160 characters; check it still reads correctly' : '') : '"TODO: one factual sentence, under 160 characters"'}`,
+  );
   if (f.regions) H.push(`regions: [${f.regions.join(', ')}]`);
   if (f.language) H.push(`language: ${f.language}`);
   H.push('pricing:');
@@ -103,8 +118,11 @@ export function writeDraft(facts, { today = new Date(), version, ai = null } = {
   B.push('');
 
   B.push('## Evidence');
-  if (f.evidence.length) for (const e of f.evidence) B.push(`- ${e.label}: ${e.url}`);
-  else B.push(`- ${todo('a link to an independent page: reviews, an app store listing, a certification or a regulator registration')}`);
+  for (const e of f.evidence) B.push(`- ${e.label}: ${e.url}`);
+  for (const r of f.regulatorsMentioned || []) B.push(`- ${todo(`link to your ${r.label} (your website mentions ${r.name})`)}`);
+  if (!f.evidence.length && !f.regulatorsMentioned?.length) {
+    B.push(`- ${todo('a link to an independent page: reviews, an app store listing, a certification or a regulator registration')}`);
+  }
   B.push('');
 
   B.push('## How to start');
@@ -137,8 +155,26 @@ export function writeDraft(facts, { today = new Date(), version, ai = null } = {
       B.push(f.returnsPage ? `- Returns: ${todo('your returns window')}${link('returns', f.returnsPage)}` : `- Returns: ${todo('your returns policy and its link')}`);
       B.push(`- Payment methods: ${todo('the ways customers can pay')}`);
       B.push(`- Product feed: ${todo('link to your product feed, if you have one')}`);
-    } else {
-      B.push(`- ${todo(`the details for the ${t} profile (see the specification, Section 7)`)}`);
+    } else if (t === 'service') {
+      B.push(`- Services offered: ${todo('the services you provide, in a few words each')}`);
+      B.push(`- Process: ${todo('what happens from first contact to the service starting')}`);
+      B.push(`- Typical cost or range: ${f.model === 'quote' ? 'Prices on request.' : ''}${todo('a typical cost or range, if your website shows one')}`.replace('request.TODO', 'request. TODO'));
+      B.push(`- Qualifications and registrations: ${todo('qualifications, accreditations or registration numbers, with links')}`);
+      B.push(...contactLines(f));
+    } else if (t === 'organisation') {
+      B.push(`- Mission: ${todo('what the organisation exists to do, in one sentence')}`);
+      B.push(`- Who it helps: ${todo('the people it serves')}`);
+      B.push(`- How to get help: ${todo('how someone gets support')}`);
+      B.push(`- Registration number: ${todo('charity or company number, with a link to the register')}`);
+      B.push(...contactLines(f));
+    } else if (t === 'product') {
+      B.push(`- Key specifications: ${todo('the main specifications, with units')}`);
+      B.push(`- Where to buy: ${todo('where customers can buy it')}`);
+      B.push(`- Warranty: ${todo('warranty terms, or none')}`);
+    } else if (t === 'content') {
+      B.push(`- Topics: ${todo('what you publish about')}`);
+      B.push(`- Update frequency: ${todo('how often new content appears')}`);
+      B.push(`- Reuse terms: ${todo('whether others may quote or reuse it')}`);
     }
     B.push('');
   }

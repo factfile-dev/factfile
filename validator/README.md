@@ -12,7 +12,7 @@ npx factfile generate example.com                 # writes ./factfile.md
 npx factfile generate example.com --ai ollama     # a local AI words the sentences
 ```
 
-The generator reads the home page and the few pages most likely to hold facts (prices, booking, contact, delivery, returns, privacy), up to 8 pages in all. It respects `robots.txt`. It uses the site's visible text and its schema.org structured data to fill in the name, summary, category, prices, address, opening hours, phone, legal name, contact email, the next step and links to independent reviews.
+The generator reads the home page, the pages most likely to hold facts (prices, booking, contact, services, about, delivery, returns, privacy) and the site's other main pages, up to 10 in all. It respects `robots.txt`. It uses the site's visible text and its schema.org structured data to fill in the name, summary, category, prices, address, opening hours, phone, legal name, contact email (including addresses hidden from spam bots), the next step, and links to independent reviews and regulators. If the site names a regulator such as Ofsted or the CQC without linking to it, the draft asks for the link.
 
 **It never invents a fact.** Every fact links to the page it came from. What a website rarely says, such as who the business is *not* for or what it does not do, is left as a `TODO` for the owner. The validator refuses to pass a file until every `TODO` is gone, so an unchecked draft can't be published by mistake.
 

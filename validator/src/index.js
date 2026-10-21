@@ -4,7 +4,7 @@ import { checkLinkedPages, fetchFactfile } from './online.js';
 import { parseFactfile } from './parse.js';
 import { checkFile, finding, registrableDomain } from './rules.js';
 
-export const VERSION = '0.2.0';
+export const VERSION = '0.3.0';
 export { parseFactfile, checkFile, fetchFactfile, checkLinkedPages, registrableDomain };
 export { generate } from './generate/index.js';
 

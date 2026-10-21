@@ -1,4 +1,5 @@
 import { findSuperlative, registrableDomain } from '../rules.js';
+import { PAGE_KINDS } from './crawl.js';
 
 const PRICE_RE = /([£$€])\s?(\d{1,3}(?:,\d{3})+|\d+)(?:\.(\d{2}))?/g;
 const CURRENCY = { '£': 'GBP', $: 'USD', '€': 'EUR' };
@@ -37,13 +38,43 @@ function humanType(t) {
     .toLowerCase();
 }
 
-/** Shorten to one sentence under the limit, at a sentence or word boundary. */
-function oneSentence(text, max = 159) {
+/**
+ * The first sentence, and a version short enough for `summary`.
+ * When it has to be shortened, it is cut at a clause boundary and flagged for the owner to check.
+ */
+export function shorten(text, max = 159) {
   const s = text.replace(/\s+/g, ' ').trim();
-  const first = s.split(/(?<=[.!?])\s+/)[0];
-  if (first.length <= max) return first;
-  return s.slice(0, max).replace(/\s+\S*$/, '').replace(/[,;:]$/, '') + '.';
+  const first = s.split(/(?<=[.!?])\s+(?=[A-Z])/)[0].replace(/([^.!?])$/, '$1.');
+  if (first.length <= max) return { full: first, short: first, cut: false };
+  let cut = first.slice(0, max);
+  // Cut before the last clause or phrase that fits ("…young people with …" → "…young people."), never mid-phrase.
+  const breaks = [...cut.matchAll(/,\s|;\s|\s[–—]\s|\s(?=(with|including|across|in|for|from|through|using|who|which|that|where|while|whose)\s)/g)].map((m) => m.index);
+  const clause = breaks.filter((i) => i > max * 0.5).pop();
+  cut = clause !== undefined ? cut.slice(0, clause) : cut.replace(/\s+\S*$/, '');
+  cut = cut.replace(/(\s+(and|or|with|for|of|the|a|an|to|in|including|such as))+$/i, '').replace(/[\s,;:–—-]+$/, '');
+  return { full: first, short: cut + '.', cut: true };
 }
+
+/** The brand name from a page title or site name: "Home - Acme | Widgets for all" → "Acme". */
+export function brandName(raw) {
+  if (!raw) return null;
+  const parts = String(raw)
+    .split(/\s+[|–—·:-]\s+|\s*\|\s*/)
+    .map((x) => x.trim())
+    .filter((x) => x && !/^(home|home ?page|welcome|official (web)?site)$/i.test(x));
+  return parts[0] || null;
+}
+
+// Regulators and registers: independent evidence that agents weigh highly.
+const REGULATORS = [
+  { name: 'Ofsted', mention: /\bOfsted\b/, host: /(^|\.)ofsted\.gov\.uk$/, label: 'Ofsted inspection reports' },
+  { name: 'CQC', mention: /\bCQC\b|Care Quality Commission/, host: /(^|\.)cqc\.org\.uk$/, label: 'CQC inspection reports' },
+  { name: 'the Charity Commission', mention: /registered charity|Charity Commission|charity (no|number)/i, host: /charitycommission\.gov\.uk$|(^|\.)oscr\.org\.uk$/, label: 'Charity register entry' },
+  { name: 'the FCA', mention: /\bFCA\b|Financial Conduct Authority/, host: /(^|\.)fca\.org\.uk$/, label: 'FCA register entry' },
+  { name: 'the SRA', mention: /\bSRA\b|Solicitors Regulation Authority/, host: /(^|\.)sra\.org\.uk$/, label: 'SRA register entry' },
+  { name: 'the GDC', mention: /\bGDC\b|General Dental Council/, host: /(^|\.)gdc-uk\.org$/, label: 'GDC register entry' },
+  { name: 'Companies House', mention: /Companies House|company (no|number|registration)/i, host: /company-information\.service\.gov\.uk$/, label: 'Companies House record' },
+];
 
 function formatPrice(symbol, whole, pence) {
   return `${symbol}${whole}${pence ? '.' + pence : ''}`;
@@ -85,7 +116,7 @@ export function extractFacts(site) {
   const { pages, homeUrl } = site;
   const home = pages[0];
   const domain = registrableDomain(homeUrl);
-  const byKind = (k) => pages.find((p) => p.kind === k);
+  const byKind = (k) => pages.find((p) => (p.kinds || [p.kind]).includes(k));
   const nodes = pages.flatMap((p) => p.jsonld.map((n) => ({ node: n, page: p })));
   const facts = { sources: new Map(), notes: [...site.notes] };
   const cite = (page, label) => {
@@ -99,19 +130,22 @@ export function extractFacts(site) {
     nodes.find(({ node }) => typesOf(node).some((t) => /Organization|Corporation/.test(t)));
   const mainTypes = main ? typesOf(main.node) : [];
 
-  // Name
-  const titleName = home.title.split(/\s[|–—-]\s|\s·\s/)[0].trim();
-  facts.name = (main?.node.name && String(main.node.name)) || home.siteName || titleName || new URL(homeUrl).hostname;
+  // Name: the brand, not the whole browser-tab title.
+  facts.name = brandName(main?.node.name) || brandName(home.siteName) || brandName(home.title) || new URL(homeUrl).hostname;
   facts.url = homeUrl.replace(/\/$/, '');
   facts.language = home.lang || null;
 
-  // Summary: the site's own description, kept only if it is factual.
+  // Summary and the Verdict's "What": the site's own description, kept only if it is factual.
   const desc = (main?.node.description && String(main.node.description)) || home.description;
   if (desc) {
-    const s = oneSentence(desc);
-    const sup = findSuperlative(s);
+    const s = shorten(desc);
+    const sup = findSuperlative(s.full);
     if (sup) facts.notes.push(`The site describes itself with "${sup}". Rewrite the summary as a plain fact.`);
-    else facts.summary = s;
+    else {
+      facts.summary = s.short;
+      facts.summaryCut = s.cut;
+      if (s.full.length <= 300) facts.what = s.full;
+    }
   }
 
   // Profile (type) and category
@@ -125,7 +159,6 @@ export function extractFacts(site) {
   if (mainTypes.some((t) => ORG_TYPES.test(t))) types.push('organisation');
   if (mainTypes.some((t) => CONTENT_TYPES.test(t))) types.push('content');
   facts.type = [...new Set(types)];
-  facts.typeGuessed = facts.type.length === 0;
   const specific = mainTypes.find((t) => !GENERIC_TYPES.test(t));
   if (specific) facts.category = humanType(specific);
 
@@ -228,7 +261,9 @@ export function extractFacts(site) {
     for (const p of lookIn) {
       const tel = p.links.find((l) => l.href.startsWith('tel:'));
       const block = p.blocks.find((x) => PHONE_RE.test(x.text) && x.text.length < 120);
-      const phone = tel ? decodeURIComponent(tel.href.slice(4)) : block ? block.text.match(PHONE_RE)[0] : null;
+      // Use the number as the page shows it ("0121 289 7311"), not the link's raw digits.
+      const telText = tel && PHONE_RE.test(tel.text) ? tel.text.match(PHONE_RE)[0] : null;
+      const phone = telText || (block ? block.text.match(PHONE_RE)[0] : tel ? decodeURIComponent(tel.href.slice(4)) : null);
       if (phone && p.text.replace(/\s/g, '').includes(phone.replace(/\s/g, ''))) {
         facts.phone = phone.trim();
         facts.phoneSource = cite(p, 'Contact');
@@ -261,10 +296,11 @@ export function extractFacts(site) {
     }
   }
 
-  // Next step
+  // Next step. A "Book appointment" button that leads to the contact page is a contact step, not online booking.
   const booking = byKind('booking');
   const download = byKind('download');
-  if (booking) facts.getStarted = { url: cite(booking, 'Booking'), kind: 'book' };
+  const bookingIsContact = booking && !PAGE_KINDS.booking.test(new URL(booking.url).pathname.replace(/[-_/]/g, ' ')) && PAGE_KINDS.contact.test(new URL(booking.url).pathname.replace(/[-_/]/g, ' '));
+  if (booking && !bookingIsContact) facts.getStarted = { url: cite(booking, 'Booking'), kind: 'book' };
   else if (appLinks.length) facts.getStarted = { url: appLinks[0].href, kind: 'download' };
   else if (download) facts.getStarted = { url: cite(download, 'Download'), kind: 'download' };
   else if (types.includes('store') && hasCart) {
@@ -284,8 +320,26 @@ export function extractFacts(site) {
     for (const [re, label, test] of REVIEW_HOSTS) {
       if (re.test(host) && (!test || test(l.href)) && !evidence.has(label)) evidence.set(label, l.href);
     }
+    for (const r of REGULATORS) {
+      if (r.host.test(host) && !evidence.has(r.label)) evidence.set(r.label, l.href);
+    }
   }
   facts.evidence = [...evidence].map(([label, url]) => ({ label, url }));
+
+  // A regulator named on the site but not linked is the strongest evidence missing from the draft.
+  facts.regulatorsMentioned = [];
+  for (const r of REGULATORS) {
+    if (r.mention.test(allText) && !evidence.has(r.label)) {
+      facts.regulatorsMentioned.push(r);
+      facts.notes.push(`The site mentions ${r.name} but does not link to it. Add a link to your ${r.label.replace(/ entry| record/, '')} in Evidence: agents weigh regulator pages above anything a business says about itself.`);
+    }
+  }
+
+  // Profile, when the structured data gave none: a business you contact or ask for a quote offers a service.
+  if (!facts.type.length) {
+    facts.type = ['service'];
+    facts.typeFallback = true;
+  }
   facts.platforms = [
     ...(appLinks.some((l) => /apps\.apple\.com/.test(l.href)) ? ['iOS'] : []),
     ...(appLinks.some((l) => /play\.google\.com/.test(l.href)) ? ['Android'] : []),

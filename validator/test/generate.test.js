@@ -147,7 +147,8 @@ test('a plain site with no structured data still gives a useful draft', async ()
   assert.match(r.text, /^name: Plain Plumbing$/m);
   assert.match(r.text, /summary: Emergency and planned plumbing repairs across Leeds\./);
   assert.match(r.text, /model: quote/);
-  assert.match(r.text, /type: \[TODO\]/);
+  assert.match(r.text, /type: \[service\]   # TODO: check this profile \(a guess\)/);
+  assert.match(r.text, /## Service details[\s\S]*- Phone: 0113 496 0456[\s\S]*- Opening hours: Mon to Fri 8am to 6pm/);
   assert.match(r.text, /get_started: https:\/\/plainplumbing\.example\/contact-us/);
 });
 
@@ -183,4 +184,47 @@ test('if the AI is unavailable, the draft still uses the site’s own words', as
   const r = await generate('hollybankgrooming.example', { fetch, today, version: 'test', ai: { provider: 'ollama' } });
   assert.match(r.text, /summary: Appointment-only dog grooming salon/);
   assert.ok(r.notes.some((n) => n.includes('AI wording skipped')));
+});
+
+test('a real-world style site: brand name, full sentences, hidden email, unlinked regulator', async () => {
+  const O = 'https://oakleafcare.example';
+  const cf = (email) => {
+    const key = 0x5a;
+    return key.toString(16) + [...email].map((c) => (c.charCodeAt(0) ^ key).toString(16).padStart(2, '0')).join('');
+  };
+  const nav = `<nav><a href="/">Home</a><a href="/child-homes/">Child Homes</a><a href="/schools/">Schools</a><a href="/our-model/">Our Model</a><a href="/career/">Careers</a><a href="/contact-us/">Contact Us</a><a href="/contact-us/">Book Appointment</a></nav>`;
+  const longDesc =
+    'Oakleaf Care provides specialist therapeutic residential care, education and support for children and young people with learning disabilities and complex needs across the region.';
+  const pages = {
+    [`${O}/`]: `<html lang="en-GB"><head><title>Home - Oakleaf Care | Therapeutic Care for Children &amp; Young People</title>
+      <meta property="og:site_name" content="Oakleaf Care | Therapeutic Care for Children &amp; Young People">
+      <meta name="description" content="${longDesc}"></head><body>${nav}
+      <h1>Therapeutic care</h1><p>Ofsted Good Rated</p>
+      <footer><a href="tel:01214960999">0121 496 0999</a> <a href="/cdn-cgi/l/email-protection#${cf('referrals@oakleafcare.example')}">[email&#160;protected]</a>
+      <p>Oakleaf House, 1 Example Road, Walsall WS0 0AA</p><p>Mon -Fri 9:00 AM - 5:00 PM</p></footer></body></html>`,
+    [`${O}/contact-us/`]: '<html><body><h1>Contact</h1><p>Call 0121 496 0999</p></body></html>',
+    [`${O}/child-homes/`]: '<html><body><h1>Child Homes</h1><p>Homes across the Midlands.</p></body></html>',
+    [`${O}/schools/`]: '<html><body><h1>Schools</h1></body></html>',
+    [`${O}/our-model/`]: '<html><body><h1>Our Model</h1></body></html>',
+    [`${O}/career/`]: '<html><body><h1>Careers</h1></body></html>',
+  };
+  const fetch = mockFetch(pages);
+  const r = await generate('oakleafcare.example', { fetch, today, version: 'test' });
+  const t = r.text;
+
+  assert.match(t, /^name: Oakleaf Care$/m, 'brand name, not the whole title');
+  assert.match(t, /^# Oakleaf Care$/m);
+  assert.match(t, /summary: .*# TODO: shortened from your site/, 'a shortened summary is flagged');
+  assert.ok(t.includes(`**What:** ${longDesc}`), 'the Verdict keeps the full sentence');
+  assert.match(t, /corrections: referrals@oakleafcare\.example/, 'the protected email is decoded');
+  assert.match(t, /- Phone: 0121 496 0999/, 'the phone number as the page shows it');
+  assert.match(t, /- Address: Oakleaf House, 1 Example Road, Walsall WS0 0AA/);
+  assert.match(t, /- Opening hours: Mon -Fri 9:00 AM - 5:00 PM/);
+  assert.match(t, /\*\*Next step:\*\* Get in touch \(\[contact\]\(https:\/\/oakleafcare\.example\/contact-us\/\)\)/, 'a "Book Appointment" button to the contact page is not online booking');
+  assert.match(t, /TODO: link to your Ofsted inspection reports \(your website mentions Ofsted\)/);
+  assert.ok(r.notes.some((n) => n.includes('mentions Ofsted')));
+  for (const path of ['/child-homes/', '/schools/', '/our-model/']) {
+    assert.ok(fetch.calls.includes(`${O}${path}`), `reads ${path}`);
+  }
+  assert.ok(!fetch.calls.includes(`${O}/career/`), 'skips careers pages');
 });
