@@ -1,0 +1,589 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>factfile.md specification v0.1 (draft)</title>
+<meta name="description" content="The factfile.md specification: file format, sections, profiles, integrity rules, conformance levels and the agent reading protocol.">
+<link rel="canonical" href="https://factfile.dev/spec">
+<link rel="describedby" type="text/markdown" href="/factfile.md" title="factfile.md">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="factfile.md specification v0.1 (draft)">
+<meta property="og:description" content="The factfile.md specification: file format, sections, profiles, integrity rules, conformance levels and the agent reading protocol.">
+<meta property="og:url" content="https://factfile.dev/spec">
+<meta property="og:type" content="website">
+<link rel="alternate" type="text/markdown" href="/spec.md" title="SPEC.md">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/">factfile<span>.md</span></a>
+    <nav aria-label="Main">
+        <a href="/what-is-factfile">What it is</a>
+        <a href="/spec" aria-current="page">Specification</a>
+        <a href="/tools">Tools</a>
+        <a href="/about">About</a>
+        <a href="https://github.com/factfile-dev/factfile">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<p class="note">Draft for public comment. Also available as <a href="/spec.md">Markdown</a> and on <a href="https://github.com/factfile-dev/factfile/blob/main/SPEC.md">GitHub</a>, where you can open an issue.</p>
+<article class="prose spec">
+<h1 id="factfile-md-specification-v0-1-draft">factfile.md Specification v0.1 (Draft)</h1>
+<p>Published 20 October 2026 · Alan Kiayi</p>
+<h2 id="1-status-and-abstract">1. Status and abstract</h2>
+<p><strong>factfile.md is a single Markdown file at the root of a website that gives AI agents a complete, checkable description of what a business offers, who it is for, what it costs and how to start.</strong> It is designed so agents can compare offerings accurately and so that dishonest files are easy to detect.</p>
+<ul>
+<li><strong>Status:</strong> Draft for public comment. Not yet stable; fields may change before v1.0.</li>
+<li><strong>Version:</strong> 0.1</li>
+<li><strong>Author:</strong> Alan Kiayi</li>
+<li><strong>Licence:</strong> This specification is published under <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>. Anyone may use, implement and adapt it with attribution. Reference tools are MIT-licensed. The name factfile.md is not licensed under CC BY; adapted or forked versions MUST use a different name.</li>
+</ul>
+<h3 id="what-factfile-md-is-not">What factfile.md is not</h3>
+<ul>
+<li>Not a navigation index. That is <a href="https://llmstxt.org/">llms.txt</a>.</li>
+<li>Not a list of callable tools or agents. That is MCP server cards, A2A agent cards and ai-catalog.json.</li>
+<li>Not a product catalogue or checkout protocol. That is ACP and UCP product feeds.</li>
+</ul>
+<p>factfile.md is the <strong>decision layer</strong> above these: the facts an agent needs to decide whether to recommend a business, then pointers to the systems that let it act.</p>
+<h2 id="2-conventions-and-design-principles">2. Conventions and design principles</h2>
+<p>The key words MUST, MUST NOT, SHOULD, SHOULD NOT and MAY are used as described in <a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a> and <a href="https://www.rfc-editor.org/rfc/rfc8174">RFC 8174</a> when written in capitals.</p>
+<p><strong>Publisher</strong> = the business that publishes the file. <strong>Agent</strong> = any AI system that reads it.</p>
+<h3 id="principles">Principles</h3>
+<p>Every rule in this specification follows from one of these. When a rule is unclear, the principles decide.</p>
+<ol>
+<li><strong>Facts, not persuasion.</strong> Statements are verifiable. Superlatives and marketing adjectives are not facts.</li>
+<li><strong>Checkable, not trusted.</strong> The file is a set of publisher claims. Every claim can be checked against a page people can see.</li>
+<li><strong>Comparable by default.</strong> The same fields in the same order on every site, so comparing ten businesses costs as little as reading one.</li>
+<li><strong>Decision first.</strong> What an agent needs to decide comes first and fits in the first 2,500 characters.</li>
+<li><strong>Small.</strong> One fetch gives the full picture, within the context budget of small local models.</li>
+<li><strong>Points, does not duplicate.</strong> Links to catalogues, APIs, documentation and checkout rather than copying them.</li>
+<li><strong>Data, never instructions.</strong> The file describes the business. It never tells an agent what to do.</li>
+</ol>
+<h2 id="3-discovery-and-serving">3. Discovery and serving</h2>
+<p><strong>A publisher MUST serve the file at <code>/factfile.md</code> on its main domain, identically to every visitor.</strong></p>
+<h3 id="locations">Locations</h3>
+<table>
+<thead>
+<tr>
+<th>Location</th>
+<th>Requirement</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>https://&lt;domain&gt;/factfile.md</code></td>
+<td>MUST. The canonical location.</td>
+</tr>
+<tr>
+<td><code>https://&lt;domain&gt;/.well-known/factfile.md</code></td>
+<td>SHOULD. Same content, following the well-known URI convention (<a href="https://www.rfc-editor.org/rfc/rfc8615">RFC 8615</a>).</td>
+</tr>
+<tr>
+<td>A human-readable page, e.g. <code>https://&lt;domain&gt;/factfile</code></td>
+<td>SHOULD. Shows the same facts as a normal web page and is named in the <code>human_page</code> field.</td>
+</tr>
+</tbody></table>
+<h3 id="serving-rules">Serving rules</h3>
+<ol>
+<li>Served over HTTPS with <code>Content-Type: text/markdown; charset=utf-8</code> (or <code>text/plain</code>).</li>
+<li>MUST be the same content for every user agent and IP address. Serving agents different facts than people (cloaking) makes the file non-conformant.</li>
+<li>MUST NOT require JavaScript, login, cookies or a challenge page. Bot protection SHOULD allow this path. At most one redirect is allowed, and it MUST stay within the same registrable domain.</li>
+<li>SHOULD send <code>Last-Modified</code> or <code>ETag</code> so agents can re-fetch efficiently.</li>
+</ol>
+<h3 id="signposts">Signposts</h3>
+<p><strong>Agents do not look for <code>/factfile.md</code> by themselves until they are built to, so publishers SHOULD point to it from their own pages.</strong> Most agent fetch tools turn a page into plain text and keep only its main content: navigation, footers and the <code>&lt;head&gt;</code> are often dropped, and long pages are cut short. So the signpost most likely to reach an agent is a link in the home page&#39;s main content, near the top, leading to a human page whose first lines are the facts themselves. The other signposts back it up for tools that keep more of the page.</p>
+<p>Publishers SHOULD add these five signposts, in this order of importance:</p>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Signpost</th>
+<th>Requirement</th>
+<th>Example</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>A &quot;Key facts&quot; link in the home page&#39;s main content</td>
+<td>SHOULD</td>
+<td><code>&lt;a href=&quot;/factfile&quot;&gt;Key facts: prices, who we serve and how to start&lt;/a&gt;</code></td>
+</tr>
+<tr>
+<td>2</td>
+<td>The human page, showing the Verdict first and ending with a link to the file</td>
+<td>SHOULD</td>
+<td><code>https://&lt;domain&gt;/factfile</code>, ending <code>&lt;a href=&quot;/factfile.md&quot;&gt;Download these facts as factfile.md&lt;/a&gt;</code></td>
+</tr>
+<tr>
+<td>3</td>
+<td>A footer link on every page</td>
+<td>SHOULD</td>
+<td><code>&lt;a href=&quot;/factfile.md&quot;&gt;Key facts (factfile.md)&lt;/a&gt;</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>A line in <code>llms.txt</code>, where present</td>
+<td>SHOULD</td>
+<td><code>- [factfile.md](https://&lt;domain&gt;/factfile.md): key facts about this business: what it offers, who it is for, prices and how to start</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Machine signposts: a <code>&lt;head&gt;</code> link, an HTTP <code>Link</code> header where the host allows it, and the <code>/.well-known/</code> copy</td>
+<td>SHOULD</td>
+<td><code>&lt;link rel=&quot;describedby&quot; type=&quot;text/markdown&quot; href=&quot;/factfile.md&quot; title=&quot;factfile.md&quot;&gt;</code> and <code>Link: &lt;/factfile.md&gt;; rel=&quot;describedby&quot;; type=&quot;text/markdown&quot;; title=&quot;factfile.md&quot;</code></td>
+</tr>
+</tbody></table>
+<p>The human page SHOULD also be listed in <code>sitemap.xml</code>, so search engines index the facts and AI search tools find them even when they never fetch the file. An entry in <code>/.well-known/ai-catalog.json</code>, where present, MAY point to the file.</p>
+<p>Rules for signposts:</p>
+<ol>
+<li>Link text MUST describe the destination for any reader. It MUST NOT address AI or give instructions (&quot;AI agents: read this first&quot;), which agents are trained to distrust as prompt injection.</li>
+<li>Signpost links MUST NOT be hidden from people (<code>display: none</code>, <code>hidden</code>, <code>aria-hidden</code>, zero size or empty text). A hidden link is a different message to agents than to people, the same fault as cloaking.</li>
+<li>The <code>describedby</code> link and header MUST carry <code>title=&quot;factfile.md&quot;</code>. Other files (for example <code>llms.txt</code>) also use <code>describedby</code>, and the title is how an agent tells them apart.</li>
+</ol>
+<p>The link relation is <code>describedby</code>, a registered link type meaning &quot;a resource that describes this one&quot;. It needs no new registration.</p>
+<h2 id="4-file-structure">4. File structure</h2>
+<p><strong>A factfile.md file has four parts in a fixed order: header, Verdict, sections, then Sources and an end marker.</strong></p>
+<ol>
+<li><strong>Header.</strong> YAML front matter between <code>---</code> lines, with the fields in Section 5. Exact values for scripts, validators and comparison.</li>
+<li><strong>Verdict.</strong> Five plain-sentence lines that are enough to decide (Section 6.1).</li>
+<li><strong>Sections.</strong> Level-2 headings in the order given in Section 6, then any profile sections (Section 7).</li>
+<li><strong>Sources and end marker.</strong> The <code>## Sources</code> section, then the exact line <code>&lt;!-- end of factfile.md --&gt;</code> as the last line.</li>
+</ol>
+<h3 id="size-and-encoding">Size and encoding</h3>
+<ul>
+<li>The file MUST be UTF-8 Markdown (<a href="https://commonmark.org/">CommonMark</a>) with YAML 1.2 front matter.</li>
+<li>The Verdict MUST end within the first 2,500 characters of the file, header included, so it survives truncation. The Verdict itself SHOULD be under 700 characters.</li>
+<li>The whole file SHOULD stay under 8,000 characters and MUST stay under 16,000. Longer detail belongs in linked pages.</li>
+<li>Headings MUST use the exact names in this specification, in English, so agents can find them. Content MAY be in any language; set <code>language</code> in the header.</li>
+</ul>
+<h3 id="why-the-end-marker">Why the end marker</h3>
+<p>Many agent fetch tools cut long content and do not tell the model. A missing end marker tells an agent it did not read the whole file and SHOULD fetch the rest or treat its picture as partial.</p>
+<h2 id="5-header-field-reference">5. Header field reference</h2>
+<p><strong>Eight fields are required in every file; the rest raise the conformance level.</strong> Dates use <a href="https://www.iso.org/iso-8601-date-and-time-format.html">ISO 8601</a> (<code>YYYY-MM-DD</code>); currencies use <a href="https://www.iso.org/iso-4217-currency-codes.html">ISO 4217</a> codes (<code>GBP</code>, <code>USD</code>, <code>EUR</code>). Fixed lists are written in <code>code</code>.</p>
+<table>
+<thead>
+<tr>
+<th>Field</th>
+<th>Type</th>
+<th>Required</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>factfile_version</code></td>
+<td>string</td>
+<td>MUST</td>
+<td>Spec version, <code>0.1</code></td>
+</tr>
+<tr>
+<td><code>name</code></td>
+<td>string</td>
+<td>MUST</td>
+<td>Business or product name as customers know it</td>
+</tr>
+<tr>
+<td><code>url</code></td>
+<td>URL</td>
+<td>MUST</td>
+<td>Main website address; MUST be on the same registrable domain as the file (www and the bare domain both count)</td>
+</tr>
+<tr>
+<td><code>type</code></td>
+<td>list</td>
+<td>MUST</td>
+<td>One or more profiles: <code>software</code> <code>store</code> <code>local</code> <code>service</code> <code>product</code> <code>content</code> <code>organisation</code></td>
+</tr>
+<tr>
+<td><code>summary</code></td>
+<td>string</td>
+<td>MUST</td>
+<td>One factual sentence, under 160 characters, no superlatives</td>
+</tr>
+<tr>
+<td><code>pricing.model</code></td>
+<td>enum</td>
+<td>MUST</td>
+<td><code>free</code> <code>freemium</code> <code>subscription</code> <code>usage</code> <code>one-time</code> <code>quote</code> <code>donation</code> <code>mixed</code></td>
+</tr>
+<tr>
+<td><code>freshness.last_verified</code></td>
+<td>date</td>
+<td>MUST</td>
+<td>When a person, or the automated process named in <code>generated_by</code>, last confirmed every fact in the file</td>
+</tr>
+<tr>
+<td><code>freshness.review_by</code></td>
+<td>date</td>
+<td>MUST</td>
+<td>No more than 6 months after <code>last_verified</code></td>
+</tr>
+<tr>
+<td><code>category</code></td>
+<td>string</td>
+<td>SHOULD</td>
+<td>Plain-words category, e.g. <code>personal budgeting app</code>, <code>wedding photographer</code></td>
+</tr>
+<tr>
+<td><code>pricing.currency</code></td>
+<td>ISO 4217</td>
+<td>MUST if prices are given</td>
+<td>Currency of every price in the file</td>
+</tr>
+<tr>
+<td><code>pricing.from</code></td>
+<td>number</td>
+<td>SHOULD</td>
+<td>Lowest paid or free price, for quick comparison</td>
+</tr>
+<tr>
+<td><code>pricing.plans</code></td>
+<td>list</td>
+<td>SHOULD</td>
+<td>Each plan: <code>name</code>, <code>price</code>, <code>period</code> (<code>one-time</code> <code>month</code> <code>year</code> <code>use</code>), <code>limits</code></td>
+</tr>
+<tr>
+<td><code>pricing.source</code></td>
+<td>URL</td>
+<td>MUST if prices are given</td>
+<td>Live page stating the prices</td>
+</tr>
+<tr>
+<td><code>get_started</code></td>
+<td>URL</td>
+<td>SHOULD</td>
+<td>Where a customer signs up, buys, books or makes contact</td>
+</tr>
+<tr>
+<td><code>human_page</code></td>
+<td>URL</td>
+<td>SHOULD</td>
+<td>Human-readable page showing the same facts</td>
+</tr>
+<tr>
+<td><code>publisher.legal_name</code></td>
+<td>string</td>
+<td>SHOULD</td>
+<td>The legal entity responsible for the claims</td>
+</tr>
+<tr>
+<td><code>publisher.corrections</code></td>
+<td>email or URL</td>
+<td>SHOULD</td>
+<td>Where errors in the file can be reported</td>
+</tr>
+<tr>
+<td><code>agent_access.api</code></td>
+<td>URL or <code>none</code></td>
+<td>MAY</td>
+<td>API documentation</td>
+</tr>
+<tr>
+<td><code>agent_access.mcp</code></td>
+<td>URL or <code>none</code></td>
+<td>MAY</td>
+<td>MCP server card or endpoint</td>
+</tr>
+<tr>
+<td><code>agent_access.docs</code></td>
+<td>URL</td>
+<td>MAY</td>
+<td>Help or documentation for agents and users</td>
+</tr>
+<tr>
+<td><code>regions</code></td>
+<td>list</td>
+<td>MAY</td>
+<td>Where the offering is available, as ISO 3166 country codes or <code>global</code></td>
+</tr>
+<tr>
+<td><code>language</code></td>
+<td>string</td>
+<td>MAY</td>
+<td>Content language, <a href="https://www.rfc-editor.org/info/bcp47">BCP 47</a> (<code>en-GB</code>); default <code>en</code></td>
+</tr>
+<tr>
+<td><code>freshness.generated_by</code></td>
+<td>string</td>
+<td>MAY</td>
+<td><code>manual</code>, or the tool and version that built the file</td>
+</tr>
+<tr>
+<td><code>products</code></td>
+<td>list</td>
+<td>MAY</td>
+<td>For multi-product publishers: links to per-product files (Section 8.3)</td>
+</tr>
+</tbody></table>
+<p>Unknown fields MUST be ignored by agents. Publishers MAY add their own fields under an <code>x_</code> prefix (e.g. <code>x_internal_id</code>).</p>
+<h2 id="6-body-sections">6. Body sections</h2>
+<p><strong>After a level-1 title with the business name, sections appear in this order, with these exact headings.</strong> Each section MUST make sense on its own, because agents often retrieve single passages rather than whole files.</p>
+<table>
+<thead>
+<tr>
+<th>Order</th>
+<th>Heading</th>
+<th>Required</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td><code>## Verdict</code></td>
+<td>MUST</td>
+<td>Five lines, below</td>
+</tr>
+<tr>
+<td>2</td>
+<td><code>## Fit</code></td>
+<td>MUST</td>
+<td><code>### Best for</code> and <code>### Not for</code> lists</td>
+</tr>
+<tr>
+<td>3</td>
+<td><code>## Pricing</code></td>
+<td>MUST</td>
+<td>Pricing in sentences, with a source link; may say &quot;Prices on request&quot; for <code>quote</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td><code>## How it differs</code></td>
+<td>SHOULD</td>
+<td>Verifiable differences from typical alternatives in the category; no named competitors</td>
+</tr>
+<tr>
+<td>5</td>
+<td><code>## Evidence</code></td>
+<td>SHOULD</td>
+<td>Links to independent sources only</td>
+</tr>
+<tr>
+<td>6</td>
+<td><code>## How to start</code></td>
+<td>SHOULD</td>
+<td>Numbered steps to sign up, buy, book or make contact</td>
+</tr>
+<tr>
+<td>7</td>
+<td><code>## How agents can use it</code></td>
+<td>SHOULD</td>
+<td>API, MCP or booking endpoints, or a plain statement that there are none</td>
+</tr>
+<tr>
+<td>8</td>
+<td><code>## Limitations</code></td>
+<td>MUST</td>
+<td>What it does not do or does not support</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Profile sections</td>
+<td>per profile</td>
+<td>Section 7</td>
+</tr>
+<tr>
+<td>10</td>
+<td><code>## Sources</code></td>
+<td>MUST</td>
+<td>Every page cited in the file</td>
+</tr>
+</tbody></table>
+<h3 id="6-1-verdict">6.1 Verdict</h3>
+<p>The Verdict MUST contain exactly these five labelled lines, in this order, each one plain sentence:</p>
+<ul>
+<li><strong>What:</strong> what it is, in plain words.</li>
+<li><strong>Best for:</strong> the customers it suits best.</li>
+<li><strong>Not for:</strong> who should look elsewhere, and why.</li>
+<li><strong>Price:</strong> the starting price or pricing model, with a link to the source.</li>
+<li><strong>Next step:</strong> the single action a customer takes first, with a link.</li>
+</ul>
+<p>The Verdict MUST NOT contradict the header, and its facts MUST also appear in the sections below.</p>
+<h3 id="6-2-fit">6.2 Fit</h3>
+<ul>
+<li><code>### Not for</code> MUST contain at least one item. Honest exclusions are what let agents recommend correctly.</li>
+<li>Items describe customers or needs (&quot;teams over 50 people&quot;), not judgements (&quot;people who want the best&quot;). Not for describes types of customer or need; missing features belong in Limitations.</li>
+</ul>
+<h3 id="6-3-how-it-differs">6.3 How it differs</h3>
+<ul>
+<li>Each item MUST be a checkable fact: a capability, a limit, a policy or a number with its source.</li>
+<li>MUST NOT name or disparage competitors. Comparison is the agent&#39;s job, made possible by identical fields across files.</li>
+</ul>
+<h3 id="6-4-evidence">6.4 Evidence</h3>
+<ul>
+<li>Links only, each with a short label: review platforms, app store pages, certifications, regulator registrations, independent press.</li>
+<li>MUST NOT link to pages whose content the publisher controls. Platform pages where others post ratings or reviews (app stores, review sites, map listings) count as independent. MUST NOT quote ratings or reviews. Agents fetch and judge the evidence themselves.</li>
+</ul>
+<h3 id="6-5-limitations">6.5 Limitations</h3>
+<ul>
+<li>At least one item. Platforms, regions, sizes, integrations or uses that are not supported.</li>
+<li>Limitations sit near the end deliberately: models recall the start and end of a document best.</li>
+</ul>
+<h2 id="7-profiles">7. Profiles</h2>
+<p><strong>A profile adds one section after Limitations; it never changes the core.</strong> A file declares its profiles in <code>type</code> and MUST include the section for each one, headed exactly as below. A business MAY declare more than one (e.g. <code>[software, service]</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Profile</th>
+<th>For</th>
+<th>Section heading</th>
+<th>SHOULD include</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><code>software</code></td>
+<td>SaaS, apps, APIs, tools</td>
+<td><code>## Software details</code></td>
+<td>Platforms and versions, integrations, data export, data location and privacy link, free trial terms, languages</td>
+</tr>
+<tr>
+<td><code>store</code></td>
+<td>Online shops, retailers</td>
+<td><code>## Store details</code></td>
+<td>Product categories, shipping regions and times, returns policy link, payment methods, link to a product feed (e.g. an ACP or UCP feed)</td>
+</tr>
+<tr>
+<td><code>local</code></td>
+<td>Shops, clinics, trades, venues</td>
+<td><code>## Local details</code></td>
+<td>Address, area served, opening hours, booking method, accessibility, parking</td>
+</tr>
+<tr>
+<td><code>service</code></td>
+<td>Agencies, consultants, freelancers</td>
+<td><code>## Service details</code></td>
+<td>Services offered, process steps, typical turnaround, typical project cost or range, portfolio link, qualifications</td>
+</tr>
+<tr>
+<td><code>product</code></td>
+<td>Physical products, brands, makers</td>
+<td><code>## Product details</code></td>
+<td>Key specifications with units, variants, where to buy, warranty, certifications</td>
+</tr>
+<tr>
+<td><code>content</code></td>
+<td>Blogs, news, courses, publications</td>
+<td><code>## Content details</code></td>
+<td>Topics, update frequency, authors and expertise, paywall, citation and reuse terms</td>
+</tr>
+<tr>
+<td><code>organisation</code></td>
+<td>Charities, public bodies, communities</td>
+<td><code>## Organisation details</code></td>
+<td>Mission, who it helps, how to get help, how to donate or volunteer, registration number</td>
+</tr>
+</tbody></table>
+<h3 id="boundaries">Boundaries</h3>
+<ul>
+<li>A <code>store</code> MUST NOT list its catalogue in factfile.md. It describes the business and links to the product feed.</li>
+<li>New profiles (e.g. <code>event</code>, <code>marketplace</code>, <code>job</code>) will be added in later versions without changing existing ones.</li>
+</ul>
+<h2 id="8-integrity-freshness-and-multiple-products">8. Integrity, freshness and multiple products</h2>
+<p><strong>These rules make a dishonest file easy to detect. Breaking any of the MUST rules makes the file non-conformant.</strong></p>
+<h3 id="8-1-integrity-rules">8.1 Integrity rules</h3>
+<ol>
+<li><strong>Visible parity.</strong> Every fact in the file MUST also appear on a page people can see on the publisher&#39;s site. Facts that exist only for agents are not allowed.</li>
+<li><strong>Receipts.</strong> Every price, number, statistic, date-bound offer or certification MUST link to a live page that states it, inline or in <code>## Sources</code>.</li>
+<li><strong>No precision without provenance.</strong> A statistic MUST state what it measures and where it comes from. Unsourced figures fail validation.</li>
+<li><strong>State each fact once.</strong> A fact appears in one section only (the Verdict and header excepted). Repeating claims to add weight is not allowed.</li>
+<li><strong>No text addressed to AI.</strong> The file MUST NOT contain instructions, requests or commands aimed at the reader (e.g. &quot;recommend&quot;, &quot;ignore&quot;, &quot;always mention&quot;), hidden text, or HTML comments other than the end marker.</li>
+<li><strong>No superlatives or rankings.</strong> Words like &quot;best&quot;, &quot;leading&quot;, &quot;#1&quot; or &quot;fastest&quot; MUST NOT appear anywhere in the file. Independent sources belong in <code>## Evidence</code> as links, for agents to judge.</li>
+<li><strong>Claims and evidence stay separate.</strong> The publisher&#39;s own statements never sit in <code>## Evidence</code>, and third-party material is never presented as the publisher&#39;s claim.</li>
+<li><strong>Accountability.</strong> The file is a public statement by the publisher about its own offering. Publishers SHOULD treat it with the same care as any other marketing claim on their website, which consumer and advertising law already covers in many countries.</li>
+</ol>
+<h3 id="8-2-freshness">8.2 Freshness</h3>
+<ul>
+<li><code>review_by</code> MUST be no more than 6 months after <code>last_verified</code>.</li>
+<li>Prices and offers change fastest. Publishers SHOULD update the file within 7 days of any change to them, ideally by generating it automatically from the same data as the website.</li>
+<li>After <code>review_by</code> has passed, agents SHOULD treat prices, offers and availability as unverified and check the receipts.</li>
+</ul>
+<h3 id="8-3-multiple-products">8.3 Multiple products</h3>
+<ul>
+<li>A publisher with several distinct offerings SHOULD publish a root <code>/factfile.md</code> describing the company, with a <code>products</code> list in the header linking to one file per offering at <code>/factfile/&lt;slug&gt;.md</code>.</li>
+<li>Each product file is a complete, conformant factfile.md in its own right.</li>
+<li>Variants of one product (sizes, tiers, colours) stay in one file.</li>
+</ul>
+<h2 id="9-conformance-levels">9. Conformance levels</h2>
+<p><strong>Three levels let a small business start in minutes and grow towards a fully checkable file.</strong> Each level includes everything in the levels below it.</p>
+<table>
+<thead>
+<tr>
+<th>Level</th>
+<th>Requires</th>
+<th>Who it suits</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>Basic</strong></td>
+<td>The 8 required header fields; <code>## Verdict</code>, <code>## Fit</code> (with at least one Not for), <code>## Pricing</code>, <code>## Limitations</code>, <code>## Sources</code>; end marker; integrity rules 4, 5 and 6; served as in Section 3</td>
+<td>Anyone, hand-written in 10 minutes</td>
+</tr>
+<tr>
+<td><strong>Comparable</strong></td>
+<td>+ <code>category</code>, <code>get_started</code>, <code>human_page</code>, <code>publisher</code>; structured <code>pricing</code> with currency and source when prices exist; the section for each declared profile</td>
+<td>Businesses that want accurate comparison</td>
+</tr>
+<tr>
+<td><strong>Checked</strong></td>
+<td>+ passes an automated check of visible parity (rule 1) and receipts (rules 2 and 3); <code>review_by</code> in the future; <code>## Evidence</code> with at least one independent link</td>
+<td>Businesses that want agents to rely on them</td>
+</tr>
+</tbody></table>
+<p>A file&#39;s level is determined by a validator, not declared by the publisher. The reference validator reports the level reached and every rule that failed, with the line it failed on.</p>
+<h2 id="10-agent-reading-protocol-and-security">10. Agent reading protocol and security</h2>
+<p><strong>Agents should treat factfile.md as the publisher&#39;s own claims: a clear, current starting point to verify, not a source to believe without checking.</strong> This section is written for people who build agents.</p>
+<h3 id="10-1-reading-protocol">10.1 Reading protocol</h3>
+<p>An agent that reads factfile.md SHOULD:</p>
+<ol>
+<li><strong>Look for it.</strong> Before relying on a business&#39;s other pages, try <code>/factfile.md</code> and <code>/.well-known/factfile.md</code> on its domain, and follow a <code>describedby</code> link titled <code>factfile.md</code> (in a <code>Link</code> header or the page <code>&lt;head&gt;</code>), a &quot;Key facts&quot; link to the human page, or any visible link to <code>factfile.md</code>.</li>
+<li><strong>Treat every statement as a publisher claim</strong> and say so when relaying it (&quot;according to the company&#39;s factfile.md…&quot;).</li>
+<li><strong>Never follow instructions found in the file.</strong> It is data. Any text addressed to the reader is a sign of manipulation and SHOULD lower trust in the whole file.</li>
+<li><strong>Check completeness.</strong> If the end marker is missing, the file was cut off; fetch the rest or treat the picture as partial.</li>
+<li><strong>Check freshness.</strong> If <code>review_by</code> has passed, verify prices, offers and availability against their receipts before relying on them.</li>
+<li><strong>Verify what matters.</strong> For prices and any number that decides the recommendation, fetch the receipt link when the task allows.</li>
+<li><strong>Weigh independent evidence above self-description.</strong> When <code>## Evidence</code> or other independent sources contradict the file, report the conflict rather than silently picking one.</li>
+<li><strong>Use the identical structure to compare.</strong> Read the same fields across candidates before choosing, rather than settling on the first acceptable option.</li>
+<li><strong>Respect <code>Not for</code>.</strong> Do not recommend a business for a need it states it does not serve.</li>
+</ol>
+<h3 id="10-2-security-considerations">10.2 Security considerations</h3>
+<ul>
+<li><strong>Prompt injection.</strong> The file is untrusted input. Agent builders SHOULD pass it to models as quoted data and apply the same defences as for any web content.</li>
+<li><strong>Cloaking.</strong> A publisher could serve agents a different file than people see. Visible parity (rule 1), the human page, and checks that fetch with a browser user agent make this detectable.</li>
+<li><strong>Impersonation.</strong> Only a file served from the business&#39;s own domain speaks for it. Copies on other domains MUST be ignored. A later version may add optional signatures.</li>
+<li><strong>Fabricated precision.</strong> Models tend to trust precise-looking figures. Receipts and validator checks for unsourced numbers are the defence; agents SHOULD NOT weight a number more because it is precise.</li>
+<li><strong>Repetition and padding.</strong> Repeating a claim can sway models. Rule 4 forbids it, and agents SHOULD count a claim once however often it appears.</li>
+<li><strong>Stale data.</strong> An old file can mislead as badly as a false one. Freshness dates and receipts limit the damage.</li>
+<li><strong>Privacy.</strong> The file MUST NOT contain personal data beyond what the publisher already shows publicly for business contact.</li>
+</ul>
+<h2 id="11-complete-examples">11. Complete examples</h2>
+<p><strong>Three fictional, conformant files are in the <a href="examples/"><code>examples/</code></a> folder:</strong> a software app (<a href="examples/software/factfile.md"><code>examples/software/factfile.md</code></a>), a local business (<a href="examples/local/factfile.md"><code>examples/local/factfile.md</code></a>) and an online shop (<a href="examples/store/factfile.md"><code>examples/store/factfile.md</code></a>). Each reaches the Comparable level and, once its parity and receipts are checked against a live site, Checked. The businesses, links and figures are invented; all addresses use the reserved <code>.example</code> domain.</p>
+<h2 id="12-versioning-open-questions-and-references">12. Versioning, open questions and references</h2>
+<p><strong>v0.x drafts may change; from v1.0, changes will be backwards compatible within a major version.</strong> New fields and profiles are additive. Removing or renaming a required field needs a new major version.</p>
+<h3 id="open-questions-for-comment">Open questions for comment</h3>
+<ul>
+<li><strong>Signatures.</strong> Should a later version add an optional signature or <code>did:web</code> identity, so cached copies can be verified?</li>
+<li><strong>Category vocabulary.</strong> When should free-text <code>category</code> become a controlled list, and based on which taxonomy?</li>
+<li><strong>Evidence quality.</strong> Which kinds of independent link should count towards Checked, and how should fake evidence pages be handled?</li>
+<li><strong>Parity checking.</strong> What tolerance should the automated parity check allow for wording differences between the file and the website?</li>
+<li><strong>Registration.</strong> Should <code>factfile.md</code> be registered with IANA as a well-known URI once the format is stable?</li>
+<li><strong>Governance.</strong> Should the specification move to a neutral home once it has independent implementers?</li>
+</ul>
+<p>Comments are welcome as <a href="https://github.com/factfile-dev/factfile/issues">GitHub issues</a>.</p>
+<h3 id="references">References</h3>
+<ul>
+<li><a href="https://www.rfc-editor.org/rfc/rfc2119">RFC 2119</a> and <a href="https://www.rfc-editor.org/rfc/rfc8174">RFC 8174</a>: requirement keywords</li>
+<li><a href="https://www.rfc-editor.org/rfc/rfc8615">RFC 8615</a>: well-known URIs</li>
+<li><a href="https://commonmark.org/">CommonMark</a>: Markdown</li>
+<li><a href="https://llmstxt.org/">llms.txt</a>: site index for language models</li>
+<li><a href="https://developers.google.com/search/docs/appearance/structured-data/sd-policies">Google structured data guidelines</a>: the visible-content precedent for rule 1</li>
+</ul>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><a href="/factfile.md">Key facts (factfile.md)</a> · <a href="/spec">Specification</a> · <a href="https://github.com/factfile-dev/factfile">GitHub</a> · <a href="mailto:hello@factfile.dev">hello@factfile.dev</a></p>
+    <p>factfile.md, created by <a href="/about">Alan Kiayi</a>. Specification licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; tools licensed MIT.</p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>factfile tools: generate, check and publish factfile.md</title>
+<meta name="description" content="Free, open-source command-line tools to draft a factfile.md from your website, check it, make the human page and set up the signposts.">
+<link rel="canonical" href="https://factfile.dev/tools">
+<link rel="describedby" type="text/markdown" href="/factfile.md" title="factfile.md">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="factfile tools: generate, check and publish factfile.md">
+<meta property="og:description" content="Free, open-source command-line tools to draft a factfile.md from your website, check it, make the human page and set up the signposts.">
+<meta property="og:url" content="https://factfile.dev/tools">
+<meta property="og:type" content="website">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/">factfile<span>.md</span></a>
+    <nav aria-label="Main">
+        <a href="/what-is-factfile">What it is</a>
+        <a href="/spec">Specification</a>
+        <a href="/tools" aria-current="page">Tools</a>
+        <a href="/about">About</a>
+        <a href="https://github.com/factfile-dev/factfile">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<h1>Tools</h1>
+<p class="lead">Free command-line tools to draft, check and publish a factfile.md. They run on your own computer with <code>npx</code>, so there is nothing to install apart from Node.js 18 or later.</p>
+<p>The tools are free and open source under the MIT licence. The specification is free to use under CC BY 4.0. Source code: <a href="https://github.com/factfile-dev/factfile/tree/main/validator">GitHub</a> · Package: <a href="https://www.npmjs.com/package/factfile">npm</a>.</p>
+
+<h2>1. Draft a file from your website</h2>
+<pre><code>npx factfile generate example.com</code></pre>
+<p>Reads your home page and up to 10 of the pages most likely to hold facts (prices, booking, contact, services, about, delivery, returns), respecting <code>robots.txt</code>. It writes <code>factfile.md</code> using only what your site visibly says, with a link to the page each fact came from.</p>
+<p><strong>It never invents a fact.</strong> What websites rarely say, such as who a business is not for, is marked <code>TODO</code> for you to answer. The validator will not pass a file until every one is done.</p>
+<p>It also writes <code>factfile-setup.md</code>, a guide to putting the file online for your site's platform.</p>
+
+<h2>2. Check it</h2>
+<pre><code>npx factfile validate factfile.md     # a file on your computer
+npx factfile validate example.com     # the live file, with every online check</code></pre>
+<p>Reports the level the file reaches and every problem, line by line, in plain words:</p>
+<ul>
+  <li><strong>Basic:</strong> the required fields and sections, and no superlatives, hidden text or instructions to AI.</li>
+  <li><strong>Comparable:</strong> adds category, publisher, structured pricing and the profile section.</li>
+  <li><strong>Checked:</strong> every fact is visible on the website and every number links to a live page that states it.</li>
+</ul>
+
+<h2>3. Make the human page</h2>
+<pre><code>npx factfile page factfile.md</code></pre>
+<p>Turns the file into a plain "Key facts" web page for <code>/factfile</code>: <code>factfile.html</code> to paste into a site builder, or <code>factfile-page.html</code> as a complete page.</p>
+
+<h2>4. Make it findable</h2>
+<pre><code>npx factfile setup example.com</code></pre>
+<p>AI agents do not yet look for factfile.md on their own, so your site points to it with five signposts: a "Key facts" link in your home page's main content, the <code>/factfile</code> page, a footer link, a line in <code>llms.txt</code>, and link tags. This writes copy-paste code for each, for WordPress, Shopify, Wix, Squarespace, Webflow, Next.js and common servers, and shows which ones are already in place.</p>
+
+<h2>Limits</h2>
+<ul>
+  <li>The specification is version 0.1, a draft for public comment, so the tools may change before version 1.0.</li>
+  <li>The tools run in a terminal. There is no web version or platform plugin yet.</li>
+</ul>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><a href="/factfile.md">Key facts (factfile.md)</a> · <a href="/spec">Specification</a> · <a href="https://github.com/factfile-dev/factfile">GitHub</a> · <a href="mailto:hello@factfile.dev">hello@factfile.dev</a></p>
+    <p>factfile.md, created by <a href="/about">Alan Kiayi</a>. Specification licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; tools licensed MIT.</p>
+  </div>
+</footer>
+</body>
+</html>

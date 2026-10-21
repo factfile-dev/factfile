@@ -1,0 +1,107 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>factfile.md: key facts</title>
+<meta name="description" content="Key facts about factfile.md: what it is, who it is for, what it costs and how to start.">
+<link rel="canonical" href="https://factfile.dev/factfile">
+<link rel="describedby" type="text/markdown" href="/factfile.md" title="factfile.md">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="factfile.md: key facts">
+<meta property="og:description" content="Key facts about factfile.md: what it is, who it is for, what it costs and how to start.">
+<meta property="og:url" content="https://factfile.dev/factfile">
+<meta property="og:type" content="website">
+<link rel="alternate" type="text/markdown" href="/factfile.md" title="factfile.md">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/">factfile<span>.md</span></a>
+    <nav aria-label="Main">
+        <a href="/what-is-factfile">What it is</a>
+        <a href="/spec">Specification</a>
+        <a href="/tools">Tools</a>
+        <a href="/about">About</a>
+        <a href="https://github.com/factfile-dev/factfile">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<article class="factfile prose" lang="en-GB">
+<h1>factfile.md: key facts</h1>
+<p class="factfile-summary">An open standard for one Markdown file of checkable business facts at a website's root, with free tools to write and check it.</p>
+<h2>At a glance</h2>
+<ul>
+<li><strong>What:</strong> An open standard for one Markdown file at a website's root that gives AI agents a business's key facts, each linked to its source page.</li>
+<li><strong>Best for:</strong> Small businesses, makers and agencies who want AI assistants to describe their offer, prices and fit correctly.</li>
+<li><strong>Not for:</strong> Businesses looking to persuade AI assistants: the file allows no superlatives or text aimed at AI.</li>
+<li><strong>Price:</strong> Free: the specification is open under CC BY 4.0 and the tools are open source (<a href="https://factfile.dev/tools">tools</a>).</li>
+<li><strong>Next step:</strong> Draft a file from your website with <code>npx factfile generate example.com</code> (<a href="https://factfile.dev/tools">tools</a>).</li>
+</ul>
+<h2>Fit</h2>
+<h3>Best for</h3>
+<ul>
+<li>Businesses whose prices, limits or eligibility are easy for AI assistants to get wrong</li>
+<li>Website owners who can upload a file or add a page in their site builder</li>
+<li>Agent builders who want one predictable place to read business facts</li>
+</ul>
+<h3>Not for</h3>
+<ul>
+<li>Businesses that do not want to say publicly who they are not for</li>
+<li>Shops wanting to list a whole product catalogue (the file links to a product feed instead)</li>
+</ul>
+<h2>Pricing</h2>
+<p>The specification and the tools cost nothing. The specification is published under CC BY 4.0 and the factfile tools under the MIT licence. Source: <a href="https://factfile.dev/tools">https://factfile.dev/tools</a></p>
+<h2>How it differs</h2>
+<ul>
+<li>Every price and number links to a live page that states it, and the validator checks that people can see the same facts on the website (<a href="https://factfile.dev/spec">specification</a>).</li>
+<li>A fixed five-line Verdict and fixed section headings, so files from different businesses can be compared line by line.</li>
+<li>A &quot;Not for&quot; list and a Limitations section are required in every file.</li>
+<li>The rules forbid superlatives, hidden text and instructions addressed to AI.</li>
+</ul>
+<h2>Evidence</h2>
+<ul>
+<li>npm package page, with download figures counted by npm: <a href="https://www.npmjs.com/package/factfile">https://www.npmjs.com/package/factfile</a></li>
+</ul>
+<h2>How to start</h2>
+<ol>
+<li>Draft a file from your website with <code>npx factfile generate example.com</code>.</li>
+<li>Complete the lines the draft marks for you, then check the file with <code>npx factfile validate factfile.md</code>.</li>
+<li>Upload it to your website's root and add the signposts listed in <code>factfile-setup.md</code>.</li>
+</ol>
+<h2>How agents can use it</h2>
+<p>There is no API or MCP server yet. Agents can fetch <code>/factfile.md</code> from any site that publishes one and follow the reading protocol in the specification (<a href="https://factfile.dev/spec">specification</a>).</p>
+<h2>Limitations</h2>
+<ul>
+<li>Version 0.1 is a draft for public comment, so fields and headings may change before version 1.0.</li>
+<li>AI assistants do not yet look for factfile.md on their own, so sites need to link to it.</li>
+<li>The tools run from a terminal and need Node.js 18 or later.</li>
+</ul>
+<h2>Software details</h2>
+<ul>
+<li>Platforms: macOS, Windows and Linux, with Node.js 18 or later</li>
+<li>Install: none needed; the tools run with <code>npx factfile</code></li>
+<li>Source code: <a href="https://github.com/factfile-dev/factfile">https://github.com/factfile-dev/factfile</a></li>
+<li>Language: English</li>
+<li>Data: the tools run on your own computer, and <code>generate</code> reads only public pages and respects robots.txt</li>
+</ul>
+<h2>Sources</h2>
+<ul>
+<li>Tools and licences: <a href="https://factfile.dev/tools">https://factfile.dev/tools</a></li>
+<li>Specification: <a href="https://factfile.dev/spec">https://factfile.dev/spec</a></li>
+<li>Source code: <a href="https://github.com/factfile-dev/factfile">https://github.com/factfile-dev/factfile</a></li>
+<li>npm package: <a href="https://www.npmjs.com/package/factfile">https://www.npmjs.com/package/factfile</a></li>
+</ul>
+<p class="factfile-meta">Last checked 2026-10-21; next review by 2027-04-21. <a href="/factfile.md">Download these facts as factfile.md</a></p>
+</article>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><a href="/factfile.md">Key facts (factfile.md)</a> · <a href="/spec">Specification</a> · <a href="https://github.com/factfile-dev/factfile">GitHub</a> · <a href="mailto:hello@factfile.dev">hello@factfile.dev</a></p>
+    <p>factfile.md, created by <a href="/about">Alan Kiayi</a>. Specification licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; tools licensed MIT.</p>
+  </div>
+</footer>
+</body>
+</html>

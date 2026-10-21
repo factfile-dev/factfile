@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://factfile.dev/sitemap.xml

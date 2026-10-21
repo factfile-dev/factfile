@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>What is factfile.md?</title>
+<meta name="description" content="factfile.md is a Markdown file at a website's root that gives AI agents a business's key facts, each linked to the page that shows it. How it compares with llms.txt, schema.org and product feeds.">
+<link rel="canonical" href="https://factfile.dev/what-is-factfile">
+<link rel="describedby" type="text/markdown" href="/factfile.md" title="factfile.md">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="What is factfile.md?">
+<meta property="og:description" content="factfile.md is a Markdown file at a website's root that gives AI agents a business's key facts, each linked to the page that shows it. How it compares with llms.txt, schema.org and product feeds.">
+<meta property="og:url" content="https://factfile.dev/what-is-factfile">
+<meta property="og:type" content="website">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/">factfile<span>.md</span></a>
+    <nav aria-label="Main">
+        <a href="/what-is-factfile" aria-current="page">What it is</a>
+        <a href="/spec">Specification</a>
+        <a href="/tools">Tools</a>
+        <a href="/about">About</a>
+        <a href="https://github.com/factfile-dev/factfile">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<h1>What is factfile.md?</h1>
+<p class="lead"><strong>factfile.md is a Markdown file at the root of a website that gives AI agents a business's key facts (what it offers, who it is for and not for, what it costs and how to start), each linked to the page that shows it.</strong></p>
+
+<h2>The problem it solves</h2>
+<p>When someone asks an AI assistant "which one should I choose?", the assistant has to work out a business from pages written for people. Prices load from scripts, limits sit in terms and conditions, and almost no website says who it is <em>not</em> for. The assistant fills the gaps, and its answer can be confidently wrong.</p>
+<p>factfile.md gives the assistant the facts in one predictable place, in the same shape for every business, with a link to check each one.</p>
+
+<h2>How it works</h2>
+<ol>
+  <li>The business publishes <code>/factfile.md</code>: a short header of fields, a five-line Verdict, then fixed sections such as Fit, Pricing and Limitations.</li>
+  <li>Every price and number links to a live page that states it. Every fact must also be visible to people on the website.</li>
+  <li>The business points to the file from its own pages, so agents find it: a "Key facts" link, a human-readable page at <code>/factfile</code>, a footer link and standard link tags.</li>
+  <li>An agent reads the file, treats it as the business's own claims, checks the links, and respects what the business says it is not for.</li>
+</ol>
+
+<h2>How it relates to other files</h2>
+<table>
+  <thead><tr><th>File or format</th><th>What it does</th><th>How factfile.md differs</th></tr></thead>
+  <tbody>
+    <tr><td><a href="https://llmstxt.org/">llms.txt</a></td><td>A Markdown index of a site's pages for language models.</td><td>factfile.md holds the facts themselves in a fixed shape, rather than pointing to pages. A site can have both; llms.txt can link to factfile.md.</td></tr>
+    <tr><td><a href="https://schema.org/">schema.org</a> structured data</td><td>Machine-readable details embedded in page code, mainly for search engines.</td><td>factfile.md is plain text an agent reads in one fetch, and adds what structured data rarely carries: who it is not for, limitations and a dated review.</td></tr>
+    <tr><td>Product feeds (ACP, UCP)</td><td>Catalogues and checkout for agents that buy.</td><td>factfile.md describes the business and links to the feed; it never lists the catalogue.</td></tr>
+    <tr><td>robots.txt</td><td>Tells crawlers what they may fetch.</td><td>Unrelated: factfile.md describes the business, not crawling permissions.</td></tr>
+  </tbody>
+</table>
+
+<h2>Who it is for</h2>
+<p>Any business with a website: software, shops, local businesses, services, products, publishers and organisations each have a profile with a few extra fields. A small business can write a Basic file by hand in ten minutes, or draft one from its website with the <a href="/tools">free tools</a>.</p>
+
+<h2>Status</h2>
+<p>Version 0.1 is a draft for public comment, published in October 2026. Fields and headings may change before version 1.0. Comments are welcome as <a href="https://github.com/factfile-dev/factfile/issues">GitHub issues</a> or by email to <a href="mailto:hello@factfile.dev">hello@factfile.dev</a>.</p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><a href="/factfile.md">Key facts (factfile.md)</a> · <a href="/spec">Specification</a> · <a href="https://github.com/factfile-dev/factfile">GitHub</a> · <a href="mailto:hello@factfile.dev">hello@factfile.dev</a></p>
+    <p>factfile.md, created by <a href="/about">Alan Kiayi</a>. Specification licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; tools licensed MIT.</p>
+  </div>
+</footer>
+</body>
+</html>

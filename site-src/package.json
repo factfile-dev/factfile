@@ -1,0 +1,8 @@
+{
+  "name": "factfile-site",
+  "private": true,
+  "type": "module",
+  "description": "Builds the factfile.dev website into ../site",
+  "scripts": { "build": "node build.mjs" },
+  "devDependencies": { "marked": "15.0.12" }
+}

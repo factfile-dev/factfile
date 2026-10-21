@@ -1,0 +1,77 @@
+<!doctype html>
+<html lang="en-GB">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>factfile.md: checkable business facts for AI agents</title>
+<meta name="description" content="factfile.md is an open standard for one Markdown file at a website's root that gives AI agents a business's key facts, each linked to the page that shows it.">
+<link rel="canonical" href="https://factfile.dev/">
+<link rel="describedby" type="text/markdown" href="/factfile.md" title="factfile.md">
+<link rel="stylesheet" href="/style.css">
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<meta property="og:title" content="factfile.md: checkable business facts for AI agents">
+<meta property="og:description" content="factfile.md is an open standard for one Markdown file at a website's root that gives AI agents a business's key facts, each linked to the page that shows it.">
+<meta property="og:url" content="https://factfile.dev/">
+<meta property="og:type" content="website">
+</head>
+<body>
+<header class="site-header">
+  <div class="wrap">
+    <a class="wordmark" href="/">factfile<span>.md</span></a>
+    <nav aria-label="Main">
+        <a href="/what-is-factfile">What it is</a>
+        <a href="/spec">Specification</a>
+        <a href="/tools">Tools</a>
+        <a href="/about">About</a>
+        <a href="https://github.com/factfile-dev/factfile">GitHub</a>
+    </nav>
+  </div>
+</header>
+<main class="wrap">
+<h1>Checkable business facts for AI agents</h1>
+<p class="lead"><strong>factfile.md</strong> is an open standard for one short Markdown file at the root of a website. It tells AI agents what a business offers, who it is for and not for, what it costs and how to start, with each fact linked to the page that shows it.</p>
+<p>People now ask AI assistants which product, shop or service to choose. The assistant reads websites built for people, where prices sit behind scripts and limits sit in small print, and fills the gaps with guesses.</p>
+
+<div class="cta">
+  <a class="keyfacts" href="/factfile">Key facts: prices, who we serve and how to start</a>
+  <a href="/spec">Read the specification</a>
+</div>
+
+<h2>What a file looks like</h2>
+<p>Every file opens with the same five-line Verdict, so an agent can compare businesses line by line. This one is for a fictional dog groomer.</p>
+<div class="file">
+  <div class="file-name">hollybankgrooming.example/factfile.md</div>
+<pre><code>## Verdict
+- **What:** A dog grooming salon in south Birmingham that works by appointment only.
+- **Best for:** Owners of dogs of any size who want a full groom or a bath and brush.
+- **Not for:** Cats or other pets, or dogs that need sedation or veterinary care.
+- **Price:** From £22 for a small-dog bath and brush; full grooms from £40 ([prices](https://hollybankgrooming.example/prices)).
+- **Next step:** Book a time online ([book](https://hollybankgrooming.example/book)).</code></pre>
+</div>
+<p>After the Verdict come fixed sections: Fit, Pricing, How it differs, Evidence, How to start, How agents can use it, Limitations and Sources. See the <a href="https://github.com/factfile-dev/factfile/tree/main/examples">complete examples</a>.</p>
+
+<h2>Why agents can rely on it</h2>
+<ul>
+  <li><strong>Receipts.</strong> Every price and number links to a live page that states it.</li>
+  <li><strong>Visible parity.</strong> Every fact must also appear on the website for people. A validator checks this.</li>
+  <li><strong>Who it is not for.</strong> Every file must say who should look elsewhere, and what the business does not do.</li>
+  <li><strong>No persuasion.</strong> No superlatives, no hidden text and no instructions aimed at AI.</li>
+  <li><strong>Dated.</strong> Each file says when it was last checked and when it will be checked again.</li>
+</ul>
+
+<h2>Publish one in three steps</h2>
+<ol class="steps">
+  <li><strong>Draft it from your website.</strong> <code>npx factfile generate example.com</code> reads your public pages and writes a draft using only what they say. It marks what only you can answer.</li>
+  <li><strong>Check it.</strong> <code>npx factfile validate factfile.md</code> reports the level the file reaches, Basic, Comparable or Checked, and every problem in plain words.</li>
+  <li><strong>Put it online and signpost it.</strong> Upload it as <code>/factfile.md</code>. The setup guide gives copy-paste links for your site's platform so agents find it.</li>
+</ol>
+<p><a href="/tools">All the tools</a> · <a href="/what-is-factfile">How it relates to llms.txt and schema.org</a></p>
+</main>
+<footer class="site-footer">
+  <div class="wrap">
+    <p><a href="/factfile.md">Key facts (factfile.md)</a> · <a href="/spec">Specification</a> · <a href="https://github.com/factfile-dev/factfile">GitHub</a> · <a href="mailto:hello@factfile.dev">hello@factfile.dev</a></p>
+    <p>factfile.md, created by <a href="/about">Alan Kiayi</a>. Specification licensed <a href="https://creativecommons.org/licenses/by/4.0/">CC BY 4.0</a>; tools licensed MIT.</p>
+  </div>
+</footer>
+</body>
+</html>
