@@ -52,11 +52,11 @@ For a site that already has a factfile.md: `npx factfile setup example.com` writ
 ### Make the human page: `factfile page`
 
 ```sh
-npx factfile page factfile.md      # writes factfile.html and factfile-page.html
+npx factfile page factfile.md      # writes factfile-page.html and factfile.html
 ```
 
-- **`factfile.html`** is the facts as an HTML block, to paste into a page called "Key facts" at `/factfile` on WordPress, Wix, Squarespace or any site builder.
-- **`factfile-page.html`** is a complete page, for sites where you upload files.
+- **`factfile-page.html`** is the facts as an HTML block, to paste into a page called "Key facts" at `/factfile` on WordPress, Wix, Squarespace or any site builder.
+- **`factfile.html`** is a complete page, for sites where you upload files.
 
 It refuses a file that still has `TODO` lines, so the page always shows finished facts.
 
