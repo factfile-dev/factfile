@@ -53,6 +53,18 @@ function layout({ path, title, description, body, head = '', bare = false, scrip
 <html lang="en-GB">
 <head>
 <meta charset="utf-8">
+<head>
+<meta charset="utf-8">
+<!-- Google tag (gtag.js) -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-EH92SZ5JD9"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+
+  gtag('config', 'G-EH92SZ5JD9');
+</script>
+<meta name="viewport" ...
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
